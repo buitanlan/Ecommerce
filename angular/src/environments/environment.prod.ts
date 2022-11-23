@@ -10,7 +10,7 @@ export const environment = {
     logoUrl: '',
   },
   oAuthConfig: {
-    issuer: 'https://localhost:44381/',
+    issuer: 'https://localhost:44375/',
     redirectUri: baseUrl,
     clientId: 'Admin_App',
     responseType: 'code',
@@ -19,7 +19,7 @@ export const environment = {
   },
   apis: {
     default: {
-      url: 'https://localhost:44312',
+      url: 'https://localhost:44365',
       rootNamespace: 'Ecommerce.Admin',
     },
   },

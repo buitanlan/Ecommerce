@@ -28,10 +28,13 @@ specifiers:
   '@angular/platform-browser': ^14.2.1
   '@angular/platform-browser-dynamic': ^14.2.1
   '@angular/router': ^14.2.1
+  '@ng-bootstrap/ng-bootstrap': 13.1.0
+  '@popperjs/core': ^2.10.2
   '@types/jasmine': ~3.6.0
   '@types/node': ^12.11.1
   '@typescript-eslint/eslint-plugin': ^5.36.2
   '@typescript-eslint/parser': ^5.36.2
+  bootstrap: ^5.2.0
   bootstrap-icons: ~1.8.3
   eslint: ^8.23.0
   jasmine-core: ~4.0.0
@@ -48,12 +51,12 @@ specifiers:
 
 dependencies:
   '@abp/ng.account': 6.0.1_2vre3qyu3tvquwtficotxjot6a
-  '@abp/ng.components': 6.0.1_nuvxqqex76gpw6wnjgljn6w5zy
+  '@abp/ng.components': 6.0.1_umr6wd23rn6x7432dvzvnv4jpm
   '@abp/ng.core': 6.0.1_vh6c3jyzt4u546xftu4wjesrei
   '@abp/ng.identity': 6.0.1_2vre3qyu3tvquwtficotxjot6a
-  '@abp/ng.setting-management': 6.0.1_ehnyvrkoqb4mfum3z36csduxc4
+  '@abp/ng.setting-management': 6.0.1_rqqq66uxqvxazm4dynyuvlgo2u
   '@abp/ng.tenant-management': 6.0.1_2vre3qyu3tvquwtficotxjot6a
-  '@abp/ng.theme.lepton-x': 1.0.0_xrrsqb66j3tohhu4xdgbmejzai
+  '@abp/ng.theme.lepton-x': 1.0.0_tbd4ma6ed6ywgs4dg6wuuuxlqm
   '@abp/ng.theme.shared': 6.0.1_qlxgmvisyhjcnelnuzu3gjv4g4
   '@angular/animations': 14.2.10_@angular+core@14.2.10
   '@angular/common': 14.2.10_7s7ken4fgdcxfrdtg2hye2nbeu
@@ -64,6 +67,9 @@ dependencies:
   '@angular/platform-browser': 14.2.10_2cx72nz3jmtgwwodpmk7x4j5na
   '@angular/platform-browser-dynamic': 14.2.10_6pwxszwfx7t6eu7geozn33s7pu
   '@angular/router': 14.2.10_qakn25icmjb4aducwsoa32etjq
+  '@ng-bootstrap/ng-bootstrap': 13.1.0_jam7v76peb2iwdewcobge44ege
+  '@popperjs/core': 2.11.6
+  bootstrap: 5.2.2_@popperjs+core@2.11.6
   bootstrap-icons: 1.8.3
   rxjs: 7.5.6
   tslib: 2.4.1
@@ -129,7 +135,7 @@ packages:
       - rxjs
     dev: false
 
-  /@abp/ng.components/6.0.1_nuvxqqex76gpw6wnjgljn6w5zy:
+  /@abp/ng.components/6.0.1_umr6wd23rn6x7432dvzvnv4jpm:
     resolution: {integrity: sha512-u36Apv4Ktx/MS0+qBenxZBQGTviL5Y+6Lr7jzvWf9QFClF132qPmLIKebIYXqO8OvyCzJA6HnGB7BB+DCH1O5g==}
     peerDependencies:
       '@abp/ng.core': '>=6.0.0'
@@ -138,6 +144,7 @@ packages:
     dependencies:
       '@abp/ng.core': 6.0.1_vh6c3jyzt4u546xftu4wjesrei
       '@abp/ng.theme.shared': 6.0.1_qlxgmvisyhjcnelnuzu3gjv4g4
+      '@ng-bootstrap/ng-bootstrap': 13.1.0_jam7v76peb2iwdewcobge44ege
       chart.js: 3.9.1
       ng-zorro-antd: 14.1.1_nqctc66dck6xjhwfwmni6cvow4
       tslib: 2.4.1
@@ -233,12 +240,12 @@ packages:
       - supports-color
     dev: true
 
-  /@abp/ng.setting-management/6.0.1_ehnyvrkoqb4mfum3z36csduxc4:
+  /@abp/ng.setting-management/6.0.1_rqqq66uxqvxazm4dynyuvlgo2u:
     resolution: {integrity: sha512-Va8ZaiHO+vi+5GmMGKGUKOUB/+KivQ5OZD4zeN0ni0K8FwcXHgYxq36ZwjUkUnEwbTsVc7nIWgIJTe8e3g8ZDw==}
     peerDependencies:
       '@abp/ng.core': 6.0.1
     dependencies:
-      '@abp/ng.components': 6.0.1_nuvxqqex76gpw6wnjgljn6w5zy
+      '@abp/ng.components': 6.0.1_umr6wd23rn6x7432dvzvnv4jpm
       '@abp/ng.core': 6.0.1_vh6c3jyzt4u546xftu4wjesrei
       '@abp/ng.theme.shared': 6.0.1_qlxgmvisyhjcnelnuzu3gjv4g4
       tslib: 2.4.1
@@ -272,7 +279,7 @@ packages:
       - rxjs
     dev: false
 
-  /@abp/ng.theme.lepton-x/1.0.0_xrrsqb66j3tohhu4xdgbmejzai:
+  /@abp/ng.theme.lepton-x/1.0.0_tbd4ma6ed6ywgs4dg6wuuuxlqm:
     resolution: {integrity: sha512-Hrgt3+X2LJC3xN0bH8U5SIjd3ZEY5tXSBKMHud9j8kgGasAn7YSqz8hnEijnGlHAKLd2QfuYbJFBe7wadgiOnA==}
     peerDependencies:
       '@abp/ng.account.core': ~6.0.0
@@ -282,7 +289,7 @@ packages:
       '@abp/ng.core': 6.0.1_vh6c3jyzt4u546xftu4wjesrei
       '@abp/ng.theme.shared': 6.0.1_qlxgmvisyhjcnelnuzu3gjv4g4
       '@volo/abp.ng.lepton-x.core': 1.0.0_5w7lyacg5kpavxr5yqr2pruwkm
-      '@volo/ngx-lepton-x.lite': 1.0.0_5hoflm3vs2ylm3uerr4ip3w7da
+      '@volo/ngx-lepton-x.lite': 1.0.0_64ugokoxulirylwkuotv3k6zrm
       tslib: 2.4.1
     transitivePeerDependencies:
       - '@angular/common'
@@ -2499,6 +2506,25 @@ packages:
       tslib: 2.4.1
     dev: false
 
+  /@ng-bootstrap/ng-bootstrap/13.1.0_jam7v76peb2iwdewcobge44ege:
+    resolution: {integrity: sha512-pmyIQ3yWT/SIRiVJqu0+0cxWvcLLyOkzkmgUk6aTjLKS/n1X/xcVfGCoUoEPo3HvpbnLKIwlRJkTEYYgC9pwnA==}
+    peerDependencies:
+      '@angular/common': ^14.1.0
+      '@angular/core': ^14.1.0
+      '@angular/forms': ^14.1.0
+      '@angular/localize': ^14.1.0
+      '@popperjs/core': ^2.10.2
+      rxjs: ^6.5.3 || ^7.4.0
+    dependencies:
+      '@angular/common': 14.2.10_7s7ken4fgdcxfrdtg2hye2nbeu
+      '@angular/core': 14.2.10_rxjs@7.5.6+zone.js@0.11.8
+      '@angular/forms': 14.2.10_qakn25icmjb4aducwsoa32etjq
+      '@angular/localize': 14.2.10_gaojdvdcxo4o6jyqnbc7rf44qq
+      '@popperjs/core': 2.11.6
+      rxjs: 7.5.6
+      tslib: 2.4.1
+    dev: false
+
   /@ngtools/webpack/14.2.9_sljdqphliwc5kftf43joyvuxfi:
     resolution: {integrity: sha512-P2zgvsfSpN4BkNzZWnPKUVOzv3y/SUWdnx/nhAG5gsQkLBp0Vf2evwQnbPUKuCrbMpYd1V/5SHb48+0B6FbUtQ==}
     engines: {node: ^14.15.0 || >=16.10.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
@@ -3120,11 +3146,12 @@ packages:
       tslib: 2.4.1
     dev: false
 
-  /@volo/ngx-lepton-x.lite/1.0.0_5hoflm3vs2ylm3uerr4ip3w7da:
+  /@volo/ngx-lepton-x.lite/1.0.0_64ugokoxulirylwkuotv3k6zrm:
     resolution: {integrity: sha512-dQYbHTjENgVf0g50n6IgRb2O1mL66oLjDkAtdmleLHxYYKKHb9EkUQJ0qOg/X19IOma/IraE6S0iXrX5VIrXfg==}
     peerDependencies:
       '@ng-bootstrap/ng-bootstrap': ^12.0.0-beta.4
     dependencies:
+      '@ng-bootstrap/ng-bootstrap': 13.1.0_jam7v76peb2iwdewcobge44ege
       '@volo/ngx-lepton-x.core': 1.0.0_5hoflm3vs2ylm3uerr4ip3w7da
       bootstrap-icons: 1.7.2
       ng-observe: 1.1.0_7s7ken4fgdcxfrdtg2hye2nbeu
