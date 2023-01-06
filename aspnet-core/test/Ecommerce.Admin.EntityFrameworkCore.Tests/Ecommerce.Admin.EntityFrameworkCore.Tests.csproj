@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ecommerce.Admin.EntityFrameworkCore\Ecommerce.Admin.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Ecommerce.Admin.TestBase\Ecommerce.Admin.TestBase.csproj" />
-    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="7.0.0-rc.2" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.Sqlite" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

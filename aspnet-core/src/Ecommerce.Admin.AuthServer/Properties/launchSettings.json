@@ -3,8 +3,8 @@
     "windowsAuthentication": false, 
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://localhost:44375",
-      "sslPort": 44375
+      "applicationUrl": "https://localhost:44335",
+      "sslPort": 44335
     }
   },
   "profiles": {
@@ -18,7 +18,7 @@
     "Ecommerce.Admin.AuthServer": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44375",
+      "applicationUrl": "https://localhost:44335",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

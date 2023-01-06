@@ -67,11 +67,11 @@
                                 <abp-column size="_3">
                                     <div class="ml-auto p-2 float-end">
                                         <abp-dropdown>
-                                            <abp-dropdown-button text="@Model.CurrentLanguage" />
+                                            <abp-dropdown-button text="@Model.CurrentLanguage"/>
                                             <abp-dropdown-menu>
                                                 @foreach (var language in Model.Languages)
                                                 {
-                                                    <abp-dropdown-item href="~/Abp/Languages/Switch?culture=@(language.CultureName)&uiCulture=@(language.UiCultureName)&returnUrl=@(System.Net.WebUtility.UrlEncode(Request.GetEncodedPathAndQuery()))">@language.DisplayName</abp-dropdown-item>
+                                                    <abp-dropdown-item href="@Url.Content($"~/Abp/Languages/Switch?culture={language.CultureName}&uiCulture={language.UiCultureName}&returnUrl={System.Net.WebUtility.UrlEncode(Request.GetEncodedPathAndQuery())}")">@language.DisplayName</abp-dropdown-item>
                                                 }
                                             </abp-dropdown-menu>
                                         </abp-dropdown>
@@ -79,7 +79,7 @@
                                 </abp-column>
 
                             </abp-row>
-                            <hr class="m-4" />
+                            <hr class="m-4"/>
 
                             <abp-row>
 
@@ -92,7 +92,7 @@
                                                 @if (!application.LogoUri.IsNullOrEmpty())
                                                 {
                                                     <div class="mx-auto">
-                                                        <img src="@application.LogoUri" style="height:64px" class="mb-3" />
+                                                        <img src="@application.LogoUri" style="height:64px" class="mb-3"/>
                                                     </div>
                                                 }
 
