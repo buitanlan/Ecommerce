@@ -10,7 +10,7 @@ using Volo.Abp.TenantManagement;
 namespace Ecommerce.Admin;
 
 [DependsOn(
-    typeof(AdminDomainModule),
+    typeof(EcommerceDomainModule),
     typeof(AbpAccountApplicationModule),
     typeof(AdminApplicationContractsModule),
     typeof(AbpIdentityApplicationModule),

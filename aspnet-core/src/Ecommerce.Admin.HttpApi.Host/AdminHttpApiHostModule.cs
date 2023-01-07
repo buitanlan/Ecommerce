@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Ecommerce.Admin.EntityFrameworkCore;
-using Ecommerce.Admin.MultiTenancy;
+using Ecommerce.EntityFrameworkCore;
+using Ecommerce.MultiTenancy;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
 using Volo.Abp;
@@ -24,7 +24,6 @@ using Volo.Abp.Autofac;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.DistributedLocking;
-using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.VirtualFileSystem;
@@ -38,7 +37,7 @@ namespace Ecommerce.Admin;
     typeof(AbpDistributedLockingModule),
     typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
     typeof(AdminApplicationModule),
-    typeof(AdminEntityFrameworkCoreModule),
+    typeof(EcommerceEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule)
 )]
@@ -72,10 +71,10 @@ public class AdminHttpApiHostModule : AbpModule
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.ReplaceEmbeddedByPhysical<AdminDomainSharedModule>(
+                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainSharedModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AdminDomainModule>(
+                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<AdminApplicationContractsModule>(

@@ -1,4 +1,4 @@
-﻿using Ecommerce.Admin.Localization;
+﻿using Ecommerce.Localization;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Ecommerce.Admin.Controllers;
@@ -9,6 +9,6 @@ public abstract class AdminController : AbpControllerBase
 {
     protected AdminController()
     {
-        LocalizationResource = typeof(AdminResource);
+        LocalizationResource = typeof(EcommerceResource);
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Ecommerce.Admin.Localization;
+﻿using Ecommerce.Localization;
 using Volo.Abp.Application.Services;
 
 namespace Ecommerce.Admin;
@@ -12,6 +9,6 @@ public abstract class AdminAppService : ApplicationService
 {
     protected AdminAppService()
     {
-        LocalizationResource = typeof(AdminResource);
+        LocalizationResource = typeof(EcommerceResource);
     }
 }

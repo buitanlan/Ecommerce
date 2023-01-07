@@ -251,15 +251,15 @@ paket-files/
 .idea/
 *.sln.iml
 
-# Admin
-src/Ecommerce.Admin.Web/Logs/*
-src/Ecommerce.Admin.Web.Host/Logs/*
-src/Ecommerce.Admin.AuthServer/Logs/*
-src/Ecommerce.Admin.HttpApi.Host/Logs/*
-src/Ecommerce.Admin.HttpApi.HostWithIds/Logs/*
-src/Ecommerce.Admin.DbMigrator/Logs/*
-src/Ecommerce.Admin.Blazor.Server/Logs/*
-src/Ecommerce.Admin.Blazor.Server.Tiered/Logs/*
+# Ecommerce
+src/Ecommerce.Web/Logs/*
+src/Ecommerce.Web.Host/Logs/*
+src/Ecommerce.AuthServer/Logs/*
+src/Ecommerce.HttpApi.Host/Logs/*
+src/Ecommerce.HttpApi.HostWithIds/Logs/*
+src/Ecommerce.DbMigrator/Logs/*
+src/Ecommerce.Blazor.Server/Logs/*
+src/Ecommerce.Blazor.Server.Tiered/Logs/*
 
 # Use abp install-libs to restore.
 **/wwwroot/libs/*

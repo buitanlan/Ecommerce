@@ -1,5 +1,5 @@
 ﻿using Localization.Resources.AbpUi;
-using Ecommerce.Admin.Localization;
+using Ecommerce.Localization;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -32,7 +32,7 @@ public class AdminHttpApiModule : AbpModule
         Configure<AbpLocalizationOptions>(options =>
         {
             options.Resources
-                .Get<AdminResource>()
+                .Get<EcommerceResource>()
                 .AddBaseTypes(
                     typeof(AbpUiResource)
                 );

@@ -1,4 +1,4 @@
-﻿using Ecommerce.Admin.Localization;
+﻿using Ecommerce.Localization;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Localization;
 
@@ -15,6 +15,6 @@ public class AdminPermissionDefinitionProvider : PermissionDefinitionProvider
 
     private static LocalizableString L(string name)
     {
-        return LocalizableString.Create<AdminResource>(name);
+        return LocalizableString.Create<EcommerceResource>(name);
     }
 }
