@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ecommerce.Admin.Application\Ecommerce.Admin.Application.csproj" />
-    <ProjectReference Include="..\Ecommerce.Admin.EntityFrameworkCore\Ecommerce.Admin.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Ecommerce.Admin.HttpApi\Ecommerce.Admin.HttpApi.csproj" />
     <ProjectReference Include="..\Ecommerce.EntityFrameworkCore\Ecommerce.EntityFrameworkCore.csproj" />
   </ItemGroup>

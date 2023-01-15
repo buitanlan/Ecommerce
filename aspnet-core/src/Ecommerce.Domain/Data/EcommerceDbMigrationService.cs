@@ -122,15 +122,14 @@ public class EcommerceDbMigrationService : ITransientDependency
 
         try
         {
-            if (!MigrationsFolderExists())
-            {
-                AddInitialMigration();
-                return true;
-            }
-            else
+            if (MigrationsFolderExists())
             {
                 return false;
             }
+
+            AddInitialMigration();
+            return true;
+
         }
         catch (Exception e)
         {

@@ -23,25 +23,23 @@ public class DbMigratorHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using (var application = await AbpApplicationFactory.CreateAsync<EcommerceDbMigratorModule>(options =>
+        using var application = await AbpApplicationFactory.CreateAsync<EcommerceDbMigratorModule>(options =>
         {
-           options.Services.ReplaceConfiguration(_configuration);
-           options.UseAutofac();
-           options.Services.AddLogging(c => c.AddSerilog());
-           options.AddDataMigrationEnvironment();
-        }))
-        {
-            await application.InitializeAsync();
+            options.Services.ReplaceConfiguration(_configuration);
+            options.UseAutofac();
+            options.Services.AddLogging(c => c.AddSerilog());
+            options.AddDataMigrationEnvironment();
+        });
+        await application.InitializeAsync();
 
-            await application
-                .ServiceProvider
-                .GetRequiredService<EcommerceDbMigrationService>()
-                .MigrateAsync();
+        await application
+            .ServiceProvider
+            .GetRequiredService<EcommerceDbMigrationService>()
+            .MigrateAsync();
 
-            await application.ShutdownAsync();
+        await application.ShutdownAsync();
 
-            _hostApplicationLifetime.StopApplication();
-        }
+        _hostApplicationLifetime.StopApplication();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

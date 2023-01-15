@@ -73,10 +73,10 @@ public class AdminHttpApiHostModule : AbpModule
             {
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainSharedModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Domain.Shared"));
+                        $"..{Path.DirectorySeparatorChar}Ecommerce.Domain.Shared"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Domain"));
+                        $"..{Path.DirectorySeparatorChar}Ecommerce.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<AdminApplicationContractsModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Application.Contracts"));
