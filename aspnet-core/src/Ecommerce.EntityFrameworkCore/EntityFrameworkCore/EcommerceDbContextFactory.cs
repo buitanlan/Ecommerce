@@ -12,12 +12,15 @@ public class EcommerceDbContextFactory : IDesignTimeDbContextFactory<EcommerceDb
 {
     public EcommerceDbContext CreateDbContext(string[] args)
     {
+        // https://www.npgsql.org/efcore/release-notes/6.0.html#opting-out-of-the-new-timestamp-mapping-logic
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
         EcommerceEfCoreEntityExtensionMappings.Configure();
 
         var configuration = BuildConfiguration();
 
         var builder = new DbContextOptionsBuilder<EcommerceDbContext>()
-            .UseSqlServer(configuration.GetConnectionString("Default"));
+            .UseNpgsql(configuration.GetConnectionString("Default"));
 
         return new EcommerceDbContext(builder.Options);
     }

@@ -18,19 +18,17 @@ public class ConsoleTestAppHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using (var application = await AbpApplicationFactory.CreateAsync<EcommerceConsoleApiClientModule>(options =>
+        using var application = await AbpApplicationFactory.CreateAsync<EcommerceConsoleApiClientModule>(options =>
         {
-           options.Services.ReplaceConfiguration(_configuration);
-           options.UseAutofac();
-        }))
-        {
-            await application.InitializeAsync();
+            options.Services.ReplaceConfiguration(_configuration);
+            options.UseAutofac();
+        });
+        await application.InitializeAsync();
 
-            var demo = application.ServiceProvider.GetRequiredService<ClientDemoService>();
-            await demo.RunAsync();
+        var demo = application.ServiceProvider.GetRequiredService<ClientDemoService>();
+        await demo.RunAsync();
 
-            await application.ShutdownAsync();
-        }
+        await application.ShutdownAsync();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

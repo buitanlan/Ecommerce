@@ -51,10 +51,8 @@ public class EcommerceEntityFrameworkCoreTestModule : AbpModule
             .UseSqlite(connection)
             .Options;
 
-        using (var context = new EcommerceDbContext(options))
-        {
-            context.GetService<IRelationalDatabaseCreator>().CreateTables();
-        }
+        using var context = new EcommerceDbContext(options);
+        context.GetService<IRelationalDatabaseCreator>().CreateTables();
 
         return connection;
     }

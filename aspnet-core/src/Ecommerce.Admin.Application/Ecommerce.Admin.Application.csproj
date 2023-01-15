@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ecommerce.Admin.Domain\Ecommerce.Admin.Domain.csproj" />
     <ProjectReference Include="..\Ecommerce.Admin.Application.Contracts\Ecommerce.Admin.Application.Contracts.csproj" />
     <ProjectReference Include="..\Ecommerce.Domain\Ecommerce.Domain.csproj" />
   </ItemGroup>
