@@ -1,7 +1,7 @@
 ﻿using System;
 using Volo.Abp.Domain.Entities;
 
-namespace Ecommerce.Inventories;
+namespace Ecommerce.InventoryTickets;
 
 public class InventoryTicketItem :  Entity<Guid>
 {

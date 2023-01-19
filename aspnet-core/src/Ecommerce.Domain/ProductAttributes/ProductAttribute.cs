@@ -1,9 +1,10 @@
 ﻿using System;
+using Ecommerce.Attributes;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace Ecommerce.Attributes;
+namespace Ecommerce.ProductAttributes;
 
-public class Attribute : CreationAuditedAggregateRoot<Guid>
+public class ProductAttribute : CreationAuditedAggregateRoot<Guid>
 {
     public string Code { get; set; }
     public AttributeType DataType { get; set; }
