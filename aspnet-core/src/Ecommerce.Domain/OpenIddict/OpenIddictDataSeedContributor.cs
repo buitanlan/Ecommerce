@@ -25,7 +25,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
     private readonly IAbpApplicationManager _applicationManager;
     private readonly IOpenIddictScopeManager _scopeManager;
     private readonly IPermissionDataSeeder _permissionDataSeeder;
-    private readonly IStringLocalizer<OpenIddictResponse> L;
+    private readonly IStringLocalizer<OpenIddictResponse> _l;
 
     public OpenIddictDataSeedContributor(
         IConfiguration configuration,
@@ -38,7 +38,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         _applicationManager = applicationManager;
         _scopeManager = scopeManager;
         _permissionDataSeeder = permissionDataSeeder;
-        L = l;
+        _l = l;
     }
 
     [UnitOfWork]
@@ -62,6 +62,19 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 }
             });
         }
+        
+        if (await _scopeManager.FindByNameAsync("Ecommerce.Admin") == null)
+        {
+            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "Ecommerce.Admin",
+                DisplayName = "Ecommerce Admin API",
+                Resources =
+                {
+                    "Ecommerce.Admin"
+                }
+            });
+        }
     }
 
     private async Task CreateApplicationsAsync()
@@ -78,21 +91,43 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
-        //Web Client
-        var webClientId = configurationSection["Ecommerce_Web:ClientId"];
+        //Admin Client
+        var webAdminClientId = configurationSection["Ecommerce_Admin:ClientId"];
+        if (!webAdminClientId.IsNullOrWhiteSpace())
+        {
+            var adminWebClientRootUrl = configurationSection["Ecommerce_Admin:RootUrl"].EnsureEndsWith('/');
+            await CreateApplicationAsync(
+                name: webAdminClientId,
+                type: OpenIddictConstants.ClientTypes.Confidential,
+                consentType: OpenIddictConstants.ConsentTypes.Implicit,
+                displayName: "Admin Application",
+                secret: configurationSection["Ecommerce_Admin:ClientSecret"] ?? "1q2w3e*",
+                grantTypes: new List<string> //Hybrid flow
+                {
+                    OpenIddictConstants.GrantTypes.Password,
+                    OpenIddictConstants.GrantTypes.RefreshToken,
+                    OpenIddictConstants.GrantTypes.Implicit
+                },
+                scopes: commonScopes,
+                redirectUri: $"{adminWebClientRootUrl}signin-oidc",
+                clientUri: adminWebClientRootUrl,
+                postLogoutRedirectUri: $"{adminWebClientRootUrl}signout-callback-oidc"
+            );
+        }
+
+        // Web Client
+        var webClientId  = configurationSection["Ecommerce_Web:ClientId"];
         if (!webClientId.IsNullOrWhiteSpace())
         {
-            var webClientRootUrl = configurationSection["Ecommerce_Web:RootUrl"].EnsureEndsWith('/');
+            var webClientRootUrl  = configurationSection["Ecommerce_Web:RootUrl"].TrimEnd('/');
 
-            /* Ecommerce_Web client is only needed if you created a tiered
-             * solution. Otherwise, you can delete this client. */
             await CreateApplicationAsync(
                 name: webClientId,
-                type: OpenIddictConstants.ClientTypes.Confidential,
+                type: OpenIddictConstants.ClientTypes.Public,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Web Application",
                 secret: configurationSection["Ecommerce_Web:ClientSecret"] ?? "1q2w3e*",
-                grantTypes: new List<string> //Hybrid flow
+                grantTypes: new List<string>
                 {
                     OpenIddictConstants.GrantTypes.AuthorizationCode,
                     OpenIddictConstants.GrantTypes.Implicit
@@ -101,100 +136,6 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 redirectUri: $"{webClientRootUrl}signin-oidc",
                 clientUri: webClientRootUrl,
                 postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
-            );
-        }
-
-        //Console Test / Angular Client
-        var consoleAndAngularClientId = configurationSection["Ecommerce_App:ClientId"];
-        if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
-        {
-            var consoleAndAngularClientRootUrl = configurationSection["Ecommerce_App:RootUrl"]?.TrimEnd('/');
-            await CreateApplicationAsync(
-                name: consoleAndAngularClientId,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Console Test / Angular Application",
-                secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                    OpenIddictConstants.GrantTypes.Password,
-                    OpenIddictConstants.GrantTypes.ClientCredentials,
-                    OpenIddictConstants.GrantTypes.RefreshToken
-                },
-                scopes: commonScopes,
-                redirectUri: consoleAndAngularClientRootUrl,
-                clientUri: consoleAndAngularClientRootUrl,
-                postLogoutRedirectUri: consoleAndAngularClientRootUrl
-            );
-        }
-
-        // Blazor Client
-        var blazorClientId = configurationSection["Ecommerce_Blazor:ClientId"];
-        if (!blazorClientId.IsNullOrWhiteSpace())
-        {
-            var blazorRootUrl = configurationSection["Ecommerce_Blazor:RootUrl"].TrimEnd('/');
-
-            await CreateApplicationAsync(
-                name: blazorClientId,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Blazor Application",
-                secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                },
-                scopes: commonScopes,
-                redirectUri: $"{blazorRootUrl}/authentication/login-callback",
-                clientUri: blazorRootUrl,
-                postLogoutRedirectUri: $"{blazorRootUrl}/authentication/logout-callback"
-            );
-        }
-
-        // Blazor Server Tiered Client
-        var blazorServerTieredClientId = configurationSection["Ecommerce_BlazorServerTiered:ClientId"];
-        if (!blazorServerTieredClientId.IsNullOrWhiteSpace())
-        {
-            var blazorServerTieredRootUrl = configurationSection["Ecommerce_BlazorServerTiered:RootUrl"].EnsureEndsWith('/');
-
-            await CreateApplicationAsync(
-                name: blazorServerTieredClientId,
-                type: OpenIddictConstants.ClientTypes.Confidential,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Blazor Server Application",
-                secret: configurationSection["Ecommerce_BlazorServerTiered:ClientSecret"] ?? "1q2w3e*",
-                grantTypes: new List<string> //Hybrid flow
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                    OpenIddictConstants.GrantTypes.Implicit
-                },
-                scopes: commonScopes,
-                redirectUri: $"{blazorServerTieredRootUrl}signin-oidc",
-                clientUri: blazorServerTieredRootUrl,
-                postLogoutRedirectUri: $"{blazorServerTieredRootUrl}signout-callback-oidc"
-            );
-        }
-
-        // Swagger Client
-        var swaggerClientId = configurationSection["Ecommerce_Swagger:ClientId"];
-        if (!swaggerClientId.IsNullOrWhiteSpace())
-        {
-            var swaggerRootUrl = configurationSection["Ecommerce_Swagger:RootUrl"].TrimEnd('/');
-
-            await CreateApplicationAsync(
-                name: swaggerClientId,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Swagger Application",
-                secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                },
-                scopes: commonScopes,
-                redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
-                clientUri: swaggerRootUrl
             );
         }
     }
@@ -214,12 +155,12 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
     {
         if (!string.IsNullOrEmpty(secret) && string.Equals(type, OpenIddictConstants.ClientTypes.Public, StringComparison.OrdinalIgnoreCase))
         {
-            throw new BusinessException(L["NoClientSecretCanBeSetForPublicApplications"]);
+            throw new BusinessException(_l["NoClientSecretCanBeSetForPublicApplications"]);
         }
 
         if (string.IsNullOrEmpty(secret) && string.Equals(type, OpenIddictConstants.ClientTypes.Confidential, StringComparison.OrdinalIgnoreCase))
         {
-            throw new BusinessException(L["TheClientSecretIsRequiredForConfidentialApplications"]);
+            throw new BusinessException(_l["TheClientSecretIsRequiredForConfidentialApplications"]);
         }
 
         if (!string.IsNullOrEmpty(name) && await _applicationManager.FindByClientIdAsync(name) != null)
@@ -348,7 +289,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 {
                     if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
                     {
-                        throw new BusinessException(L["InvalidRedirectUri", redirectUri]);
+                        throw new BusinessException(_l["InvalidRedirectUri", redirectUri]);
                     }
 
                     if (application.RedirectUris.All(x => x != uri))
@@ -364,7 +305,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 {
                     if (!Uri.TryCreate(postLogoutRedirectUri, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
                     {
-                        throw new BusinessException(L["InvalidPostLogoutRedirectUri", postLogoutRedirectUri]);
+                        throw new BusinessException(_l["InvalidPostLogoutRedirectUri", postLogoutRedirectUri]);
                     }
 
                     if (application.PostLogoutRedirectUris.All(x => x != uri))
