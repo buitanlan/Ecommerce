@@ -119,11 +119,11 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         var webClientId  = configurationSection["Ecommerce_Web:ClientId"];
         if (!webClientId.IsNullOrWhiteSpace())
         {
-            var webClientRootUrl  = configurationSection["Ecommerce_Web:RootUrl"].TrimEnd('/');
+            var webClientRootUrl  = configurationSection["Ecommerce_Web:RootUrl"].EnsureEndsWith('/');
 
             await CreateApplicationAsync(
                 name: webClientId,
-                type: OpenIddictConstants.ClientTypes.Public,
+                type: OpenIddictConstants.ClientTypes.Confidential,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Web Application",
                 secret: configurationSection["Ecommerce_Web:ClientSecret"] ?? "1q2w3e*",
