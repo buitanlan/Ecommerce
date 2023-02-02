@@ -200,7 +200,7 @@ public class AdminHttpApiHostModule : AbpModule
 
             var configuration = context.GetConfiguration();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            options.OAuthScopes("Admin");
+            options.OAuthScopes("Ecommerce.Admin");
         });
 
         app.UseAuditing();
