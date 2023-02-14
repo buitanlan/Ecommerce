@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { LayoutService } from "./service/app.layout.service";
+import { LayoutService } from './service/app.layout.service';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -10,8 +10,9 @@ import { RouterLink } from '@angular/router';
     <div class="layout-topbar">
       <a class="layout-topbar-logo" routerLink="">
         <img
-          src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg"
-          alt="logo">
+          src="assets/layout/images/{{ layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white' }}.svg"
+          alt="logo"
+        />
         <span>SAKAI</span>
       </a>
 
@@ -19,13 +20,19 @@ import { RouterLink } from '@angular/router';
         <i class="pi pi-bars"></i>
       </button>
 
-      <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
-              (click)="layoutService.showProfileSidebar()">
+      <button
+        #topbarmenubutton
+        class="p-link layout-topbar-menu-button layout-topbar-button"
+        (click)="layoutService.showProfileSidebar()"
+      >
         <i class="pi pi-ellipsis-v"></i>
       </button>
 
-      <div #topbarmenu class="layout-topbar-menu"
-           [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+      <div
+        #topbarmenu
+        class="layout-topbar-menu"
+        [ngClass]="{ 'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible }"
+      >
         <button class="p-link layout-topbar-button">
           <i class="pi pi-calendar"></i>
           <span>Calendar</span>
@@ -41,21 +48,17 @@ import { RouterLink } from '@angular/router';
       </div>
     </div>
   `,
-  imports: [
-    NgClass,
-    RouterLink
-  ],
-  standalone: true
+  imports: [NgClass, RouterLink],
+  standalone: true,
 })
 export class AppTopBarComponent {
+  items!: MenuItem[];
 
-    items!: MenuItem[];
+  @ViewChild('menubutton') menuButton!: ElementRef;
 
-    @ViewChild('menubutton') menuButton!: ElementRef;
+  @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
 
-    @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
+  @ViewChild('topbarmenu') menu!: ElementRef;
 
-    @ViewChild('topbarmenu') menu!: ElementRef;
-
-    constructor(public layoutService: LayoutService) { }
+  constructor(public layoutService: LayoutService) {}
 }

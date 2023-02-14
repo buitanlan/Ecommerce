@@ -4,13 +4,9 @@ import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
-  template: `
-    <router-outlet></router-outlet>
-  `,
-  imports: [
-    RouterOutlet
-  ],
-  standalone: true
+  template: ` <router-outlet></router-outlet> `,
+  imports: [RouterOutlet],
+  standalone: true,
 })
 export class AppComponent {
   menuMode = 'static';
@@ -20,4 +16,5 @@ export class AppComponent {
   ngOnInit() {
     this.primengConfig.ripple = true;
     document.documentElement.style.fontSize = '14px';
-  }}
+  }
+}

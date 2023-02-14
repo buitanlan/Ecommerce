@@ -1,0 +1,9 @@
+tailwind.config.js
+node_modules
+**/assets
+**/*.json
+/.husky/pre-commit
+/.prettierignore
+/pnpm-lock.yaml
+/.editorconfig
+/.gitignore
