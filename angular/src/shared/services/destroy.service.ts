@@ -1,10 +1,10 @@
 import { OnDestroy } from '@angular/core';
-import { pipe, Subject, takeUntil } from 'rxjs';
+import { Observable, pipe, Subject, takeUntil, UnaryFunction } from 'rxjs';
 
-export class DestroyService implements OnDestroy {
+export class DestroyService<T> implements OnDestroy {
   readonly destroy$ = new Subject<void>();
-  get pipe() {
-    return pipe(takeUntil(this.destroy$));
+  pipe<T>() {
+    return pipe(takeUntil<T>(this.destroy$));
   }
   ngOnDestroy(): void {
     this.destroy$.next();
