@@ -5,10 +5,10 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadComponent: () => AppLayoutComponent
+    loadComponent: () => AppLayoutComponent,
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.route').then(m => m.routes)
-  }
+    loadChildren: () => import('./auth/auth.route').then((m) => m.routes),
+  },
 ];

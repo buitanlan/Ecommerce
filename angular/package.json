@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "format": "pnpx prettier \"src/**/*.{ts,html,scss,css}\" --write",
+    "prepare": "cd .. &&pnpx husky@8.0.2 install ./angular/.husky"
   },
   "private": true,
   "dependencies": {
@@ -32,14 +35,19 @@
     "@angular/compiler-cli": "^15.1.4",
     "@types/jasmine": "~4.3.1",
     "autoprefixer": "^10.4.13",
+    "husky": "8.0.3",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.1",
     "karma-chrome-launcher": "~3.1.1",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
+    "lint-staged": "13.1.2",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.6",
     "typescript": "~4.9.5"
+  },
+  "lint-staged": {
+    "*": "pnpm run format"
   }
 }
