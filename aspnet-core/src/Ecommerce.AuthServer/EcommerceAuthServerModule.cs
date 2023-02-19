@@ -88,7 +88,7 @@ public class EcommerceAuthServerModule : AbpModule
         Configure<AbpAuditingOptions>(options =>
         {
                 //options.IsEnabledForGetRequests = true;
-                options.ApplicationName = "AuthServer";
+            options.ApplicationName = "AuthServer";
         });
 
         if (hostingEnvironment.IsDevelopment())
