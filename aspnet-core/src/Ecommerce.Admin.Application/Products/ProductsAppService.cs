@@ -2,48 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Ecommerce.ProductCategories;
+using Ecommerce.Admin.ProductCategories;
+using Ecommerce.Products;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace Ecommerce.Admin.ProductCategories;
+namespace Ecommerce.Admin.Products;
 
-public class ProductCategoriesAppService: CrudAppService<
-    ProductCategory,
-    ProductCategoryDto,
+public class ProductsAppService : CrudAppService<
+    Product,
+    ProductDto,
     Guid,
     PagedResultRequestDto,
-    CreateUpdateProductCategoryDto,
-    CreateUpdateProductCategoryDto>, IProductCategoriesAppService
+    CreateUpdateProductDto,
+    CreateUpdateProductDto>, IProductsAppService
 {
-    public ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository)
-        : base(repository)
+    public ProductsAppService(IRepository<Product, Guid> repository) : base(repository)
     {
     }
 
-    public async Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
+    public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
         query = query.WhereIf(!string.IsNullOrWhiteSpace(input.Keyword), x => x.Name.Contains(input.Keyword));
+
         var totalCount = await AsyncExecuter.CountAsync(query);
         var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
-        return new PagedResultDto<ProductCategoryInListDto>(totalCount,
-            ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data));
 
+        return new PagedResultDto<ProductInListDto>(totalCount, ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data));
     }
 
-    public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
+    public async Task<List<ProductInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
         query = query.Where(x => x.IsActive == true);
         var data = await AsyncExecuter.ToListAsync(query);
-        return ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data);
+
+        return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);    
     }
 
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
-        await UnitOfWorkManager.Current.SaveChangesAsync();
+        await UnitOfWorkManager.Current.SaveChangesAsync();    
     }
 }
