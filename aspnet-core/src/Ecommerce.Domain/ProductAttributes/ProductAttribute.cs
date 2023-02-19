@@ -1,5 +1,4 @@
 ﻿using System;
-using Ecommerce.Attributes;
 using Volo.Abp.Domain.Entities.Auditing;
 
 namespace Ecommerce.ProductAttributes;
