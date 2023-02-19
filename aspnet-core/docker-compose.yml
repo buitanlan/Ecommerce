@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  ecommerce.admin.httpapi.host:
+    image: ${DOCKER_REGISTRY-}ecommerceadminhttpapihost
+    build:
+      context: .
+      dockerfile: src/Ecommerce.Admin.HttpApi.Host/Dockerfile
+
+  ecommerce.httpapi.host:
+    image: ${DOCKER_REGISTRY-}ecommercehttpapihost
+    build:
+      context: .
+      dockerfile: src/Ecommerce.HttpApi.Host/Dockerfile
+
