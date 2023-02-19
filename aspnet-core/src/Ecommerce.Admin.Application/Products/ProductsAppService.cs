@@ -22,11 +22,11 @@ public class ProductsAppService : CrudAppService<
     {
     }
 
-    public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(BaseListFilterDto input)
+    public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
         query = query.WhereIf(!string.IsNullOrWhiteSpace(input.Keyword), x => x.Name.Contains(input.Keyword));
-
+        query = query.WhereIf(input.CategoryId.HasValue, x => x.CategoryId == input.CategoryId);
         var totalCount = await AsyncExecuter.CountAsync(query);
         var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
 
