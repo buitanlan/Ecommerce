@@ -15,6 +15,7 @@ public class CreateUpdateProductDto : EntityDto<Guid>
     public int SortOrder { get; set; }
     public bool Visibility { get; set; }
     public bool IsActive { get; set; }
+    public double SellPrice { get; set; }
     public Guid CategoryId { get; set; }
     public string SeoMetaDescription { get; set; }
     public string Description { get; set; }
