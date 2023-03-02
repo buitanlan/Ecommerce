@@ -26,7 +26,7 @@ public class ProductManager : DomainService
         int sortOrder, bool visibility,
         bool isActive, Guid categoryId,
         string seoMetaDescription, string description,
-        string thumbnailPicture, double sellPrice)
+        double sellPrice)
     {
         if (await _productRepository.AnyAsync(x => x.Name == name))
         {
@@ -46,7 +46,7 @@ public class ProductManager : DomainService
         var category =  await _productCategoryRepository.GetAsync(categoryId);
 
         return new Product(Guid.NewGuid(),manufacturerId,name,code,slug,productType,sKU,sortOrder,
-            visibility,isActive,categoryId,seoMetaDescription,description,thumbnailPicture,sellPrice, category?.Name,category?.Slug);
+            visibility,isActive,categoryId,seoMetaDescription,description,null,sellPrice, category?.Name,category?.Slug);
     }
     
 }
