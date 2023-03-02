@@ -79,10 +79,10 @@ public class EcommerceHttpApiHostModule : AbpModule
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommerceApplicationContractsModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}Ecommerce.Application.Contracts"));
+                        $"..{Path.DirectorySeparatorChar}Ecommerce.Public.Application.Contracts"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommerceApplicationModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
-                        $"..{Path.DirectorySeparatorChar}Ecommerce.Application"));
+                        $"..{Path.DirectorySeparatorChar}Ecommerce.Public.Application"));
             });
         }
     }

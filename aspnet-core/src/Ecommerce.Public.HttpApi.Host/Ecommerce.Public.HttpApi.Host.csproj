@@ -28,9 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ecommerce.Application\Ecommerce.Application.csproj" />
+    <ProjectReference Include="..\Ecommerce.Public.Application\Ecommerce.Public.Application.csproj" />
     <ProjectReference Include="..\Ecommerce.EntityFrameworkCore\Ecommerce.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\Ecommerce.HttpApi\Ecommerce.HttpApi.csproj" />
+    <ProjectReference Include="..\Ecommerce.Public.HttpApi\Ecommerce.Public.HttpApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

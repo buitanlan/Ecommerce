@@ -21,7 +21,7 @@ using Serilog.Events;
 
 try
 {
-    Log.Information("Starting Ecommerce.HttpApi.Host.");
+    Log.Information("Starting Ecommerce.Public.HttpApi.Host.");
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.AddAppSettingsSecretsJson()
         .UseAutofac()
