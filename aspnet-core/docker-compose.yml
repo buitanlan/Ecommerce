@@ -7,9 +7,16 @@ services:
       context: .
       dockerfile: src/Ecommerce.Admin.HttpApi.Host/Dockerfile
 
-  ecommerce.httpapi.host:
-    image: ${DOCKER_REGISTRY-}ecommercehttpapihost
+  ecommerce.authserver:
+    image: ${DOCKER_REGISTRY-}ecommerceauthserver
     build:
       context: .
-      dockerfile: src/Ecommerce.HttpApi.Host/Dockerfile
+      dockerfile: src/Ecommerce.AuthServer/Dockerfile
+
+
+  ecommerce.public.httpapi.host:
+    image: ${DOCKER_REGISTRY-}ecommercepublichttpapihost
+    build:
+      context: .
+      dockerfile: src/Ecommerce.Public.HttpApi.Host/Dockerfile
 

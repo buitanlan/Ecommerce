@@ -1,12 +1,12 @@
 {
   "profiles": {
-    "Ecommerce.HttpApi.Host": {
+    "Ecommerce.Public.HttpApi.Host": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5000"
+      "applicationUrl": "https://localhost:6001"
     },
     "Docker": {
       "commandName": "Docker",
