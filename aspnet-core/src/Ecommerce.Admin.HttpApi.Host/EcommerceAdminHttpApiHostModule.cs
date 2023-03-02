@@ -36,12 +36,12 @@ namespace Ecommerce.Admin;
     typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpDistributedLockingModule),
     typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
-    typeof(AdminApplicationModule),
+    typeof(EcommerceAdminApplicationModule),
     typeof(EcommerceEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule)
 )]
-public class AdminHttpApiHostModule : AbpModule
+public class EcommerceAdminHttpApiHostModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -80,7 +80,7 @@ public class AdminHttpApiHostModule : AbpModule
                 options.FileSets.ReplaceEmbeddedByPhysical<AdminApplicationContractsModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AdminApplicationModule>(
+                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceAdminApplicationModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Application"));
             });
@@ -91,7 +91,7 @@ public class AdminHttpApiHostModule : AbpModule
     {
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
-            options.ConventionalControllers.Create(typeof(AdminApplicationModule).Assembly);
+            options.ConventionalControllers.Create(typeof(EcommerceAdminApplicationModule).Assembly);
         });
     }
 
