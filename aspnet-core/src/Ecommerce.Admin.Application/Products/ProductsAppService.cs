@@ -14,7 +14,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.Products;
 
-public class ProductsAppService : CrudAppService<
+public partial class ProductsAppService : CrudAppService<
     Product,
     ProductDto,
     Guid,
@@ -117,9 +117,12 @@ public class ProductsAppService : CrudAppService<
     
     private async Task SaveThumbnailImageAsync(string fileName, string base64)
     {
-        Regex regex = new Regex(@"^[\w/\:.-]+;base64,");
+        var regex = ThumbnailRegex();
         base64 = regex.Replace(base64, string.Empty);
-        byte[] bytes = Convert.FromBase64String(base64);
+        var bytes = Convert.FromBase64String(base64);
         await _fileContainer.SaveAsync(fileName, bytes, overrideExisting: true);
     }
+
+    [GeneratedRegex("^[\\w/\\:.-]+;base64,")]
+    private static partial Regex ThumbnailRegex();
 }
