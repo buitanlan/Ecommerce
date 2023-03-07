@@ -16,4 +16,5 @@ CreateUpdateProductDto>
     Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input);
     Task<List<ProductInListDto>> GetListAllAsync();
     Task DeleteMultipleAsync(IEnumerable<Guid> ids);
+    Task<string> GetThumbnailImageAsync(string fileName);
 }
