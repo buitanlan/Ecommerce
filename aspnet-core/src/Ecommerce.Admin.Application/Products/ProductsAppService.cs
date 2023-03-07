@@ -61,7 +61,7 @@ public partial class ProductsAppService : CrudAppService<
         var product = await _productManager.CreateAsync(input.ManufacturerId, input.Name, input.Code, input.Slug, input.ProductType, input.SKU,
             input.SortOrder, input.Visibility, input.IsActive, input.CategoryId, input.SeoMetaDescription, input.Description, input.SellPrice);
 
-        if (input.ThumbnailPictureContent != null && input.ThumbnailPictureContent.Length > 0)
+        if (input.ThumbnailPictureContent is { Length: > 0 })
         {
             await SaveThumbnailImageAsync(input.ThumbnailPictureName, input.ThumbnailPictureContent);
             product.ThumbnailPicture = input.ThumbnailPictureName;
@@ -125,4 +125,20 @@ public partial class ProductsAppService : CrudAppService<
 
     [GeneratedRegex("^[\\w/\\:.-]+;base64,")]
     private static partial Regex ThumbnailRegex();
+    
+    public async Task<string> GetThumbnailImageAsync(string fileName)
+    {
+        if (string.IsNullOrEmpty(fileName))
+        {
+            return null;
+        }
+        var thumbnailContent = await _fileContainer.GetAllBytesOrNullAsync(fileName);
+
+        if (thumbnailContent is null)
+        {
+            return null;
+        }
+        var result = Convert.ToBase64String(thumbnailContent);
+        return result;
+    }
 }
