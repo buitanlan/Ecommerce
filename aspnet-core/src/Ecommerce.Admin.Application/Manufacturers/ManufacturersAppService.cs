@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Ecommerce.Manufacturers;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.Manufacturers;
 
+[Authorize]
 public class ManufacturersAppService : CrudAppService<
     Manufacturer,
     ManufacturerDto,
