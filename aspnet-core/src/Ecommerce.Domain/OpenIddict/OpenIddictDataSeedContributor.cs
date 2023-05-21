@@ -242,8 +242,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                     application.Permissions.Add(OpenIddictConstants.Permissions.Endpoints.Authorization);
                 }
 
-                if (grantType == OpenIddictConstants.GrantTypes.AuthorizationCode ||
-                    grantType == OpenIddictConstants.GrantTypes.ClientCredentials ||
+                if (grantType is OpenIddictConstants.GrantTypes.AuthorizationCode or OpenIddictConstants.GrantTypes.ClientCredentials ||
                     grantType == OpenIddictConstants.GrantTypes.Password ||
                     grantType == OpenIddictConstants.GrantTypes.RefreshToken ||
                     grantType == OpenIddictConstants.GrantTypes.DeviceCode)

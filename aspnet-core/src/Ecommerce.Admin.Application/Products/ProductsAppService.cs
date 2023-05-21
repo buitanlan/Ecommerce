@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ecommerce.Admin.ProductCategories;
 using Ecommerce.ProductCategories;
 using Ecommerce.Products;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -14,6 +15,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.Products;
 
+[Authorize]
 public partial class ProductsAppService : CrudAppService<
     Product,
     ProductDto,
@@ -58,9 +60,22 @@ public partial class ProductsAppService : CrudAppService<
     }
     public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
     {
-        var product = await _productManager.CreateAsync(input.ManufacturerId, input.Name, input.Code, input.Slug, input.ProductType, input.SKU,
-            input.SortOrder, input.Visibility, input.IsActive, input.CategoryId, input.SeoMetaDescription, input.Description, input.SellPrice);
-
+        
+        var product = await _productManager.CreateAsync(
+            input.ManufacturerId, 
+            input.Name, 
+            input.Code, 
+            input.Slug, 
+            input.ProductType, 
+            input.SKU,
+            input.SortOrder, 
+            input.Visibility, 
+            input.IsActive, 
+            input.CategoryId, 
+            input.SeoMetaDescription, 
+            input.Description, 
+            input.SellPrice);
+        
         if (input.ThumbnailPictureContent is { Length: > 0 })
         {
             await SaveThumbnailImageAsync(input.ThumbnailPictureName, input.ThumbnailPictureContent);

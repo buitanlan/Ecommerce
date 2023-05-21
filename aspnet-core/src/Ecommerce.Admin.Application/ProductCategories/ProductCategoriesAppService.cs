@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ecommerce.ProductCategories;
+using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.ProductCategories;
 
+[Authorize]
 public class ProductCategoriesAppService: CrudAppService<
     ProductCategory,
     ProductCategoryDto,
