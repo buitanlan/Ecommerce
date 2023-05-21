@@ -22,21 +22,25 @@ public partial class ProductsAppService : CrudAppService<
     Guid,
     PagedResultRequestDto,
     CreateUpdateProductDto,
-    CreateUpdateProductDto>, IProductsAppService
+    CreateUpdateProductDto>, 
+    IProductsAppService
 {
     private readonly ProductManager _productManager;
     private readonly IRepository<ProductCategory> _productCategoryRepository;
     private readonly IBlobContainer<ProductThumbnailPictureContainer> _fileContainer;
+    private readonly ProductCodeGenerator _productCodeGenerator;
     public ProductsAppService(
         IRepository<Product, Guid> repository,
         IRepository<ProductCategory> productCategoryRepository,
         ProductManager productManager,
-        IBlobContainer<ProductThumbnailPictureContainer> fileContainer
-        ) : base(repository)
+        IBlobContainer<ProductThumbnailPictureContainer> fileContainer, 
+        ProductCodeGenerator productCodeGenerator) 
+        : base(repository)
     {
         _productManager = productManager;
         _productCategoryRepository = productCategoryRepository;
         _fileContainer = fileContainer;
+        _productCodeGenerator = productCodeGenerator;
     }
 
     public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
@@ -155,5 +159,10 @@ public partial class ProductsAppService : CrudAppService<
         }
         var result = Convert.ToBase64String(thumbnailContent);
         return result;
+    }
+
+    public async Task<string> GetSuggestNewCodeAsync()
+    {
+        return await _productCodeGenerator.GenerateAsync();
     }
 }
