@@ -20,7 +20,8 @@ namespace Ecommerce.Admin;
     typeof(AbpTenantManagementApplicationModule),
     typeof(AbpFeatureManagementApplicationModule),
     typeof(AbpSettingManagementApplicationModule),
-    typeof(AbpBlobStoringFileSystemModule)    )]
+    typeof(AbpBlobStoringFileSystemModule)    
+    )]
 public class EcommerceAdminApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
