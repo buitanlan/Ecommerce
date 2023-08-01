@@ -17,11 +17,11 @@ public class FakeCurrentPrincipalAccessor : ThreadCurrentPrincipalAccessor
 
     private ClaimsPrincipal GetPrincipal()
     {
-        if (_principal == null)
+        if (_principal is null)
         {
             lock (this)
             {
-                if (_principal == null)
+                if (_principal is null)
                 {
                     _principal = new ClaimsPrincipal(
                         new ClaimsIdentity(

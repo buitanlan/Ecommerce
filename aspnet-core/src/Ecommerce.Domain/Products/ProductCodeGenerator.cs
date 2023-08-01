@@ -17,7 +17,7 @@ public class ProductCodeGenerator : ITransientDependency
     {
         string newCode;
         var identitySetting = await _identitySettingRepository.FindAsync(EcommerceConsts.ProductIdentitySettingId);
-        if (identitySetting == null)
+        if (identitySetting is null)
         {
             identitySetting = await _identitySettingRepository.InsertAsync(new IdentitySetting(EcommerceConsts.ProductIdentitySettingId, "Sản phẩm", EcommerceConsts.ProductIdentitySettingPrefix, 1, 1));
             newCode = identitySetting.Prefix + identitySetting.CurrentNumber;

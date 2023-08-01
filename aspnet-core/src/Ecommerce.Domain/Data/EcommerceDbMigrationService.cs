@@ -88,7 +88,7 @@ public class EcommerceDbMigrationService : ITransientDependency
     private async Task MigrateDatabaseSchemaAsync(Tenant tenant = null)
     {
         Logger.LogInformation(
-            $"Migrating schema for {(tenant == null ? "host" : tenant.Name + " tenant")} database...");
+            $"Migrating schema for {(tenant is null ? "host" : tenant.Name + " tenant")} database...");
 
         foreach (var migrator in _dbSchemaMigrators)
         {
@@ -98,7 +98,7 @@ public class EcommerceDbMigrationService : ITransientDependency
 
     private async Task SeedDataAsync(Tenant tenant = null)
     {
-        Logger.LogInformation($"Executing {(tenant == null ? "host" : tenant.Name + " tenant")} database seed...");
+        Logger.LogInformation($"Executing {(tenant is null ? "host" : tenant.Name + " tenant")} database seed...");
 
         await _dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
             .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName, IdentityDataSeedContributor.AdminEmailDefaultValue)
@@ -188,7 +188,7 @@ public class EcommerceDbMigrationService : ITransientDependency
     {
         var slnDirectoryPath = GetSolutionDirectoryPath();
 
-        if (slnDirectoryPath == null)
+        if (slnDirectoryPath is null)
         {
             throw new Exception("Solution folder not found!");
         }

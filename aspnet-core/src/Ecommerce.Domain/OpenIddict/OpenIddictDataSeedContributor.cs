@@ -50,7 +50,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
     private async Task CreateScopesAsync()
     {
-        if (await _scopeManager.FindByNameAsync("Ecommerce") == null)
+        if (await _scopeManager.FindByNameAsync("Ecommerce") is null)
         {
             await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
@@ -63,7 +63,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             });
         }
         
-        if (await _scopeManager.FindByNameAsync("Ecommerce.Admin") == null)
+        if (await _scopeManager.FindByNameAsync("Ecommerce.Admin") is null)
         {
             await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
@@ -198,7 +198,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         }
 
         var client = await _applicationManager.FindByClientIdAsync(name);
-        if (client == null)
+        if (client is null)
         {
             var application = new AbpApplicationDescriptor
             {
