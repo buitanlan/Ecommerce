@@ -75,7 +75,7 @@ public class IdentityDataSeeder : ITransientDependency, IIdentityDataSeeder
             const string adminRoleName = "Admin";
             var adminRole =
                 await RoleRepository.FindByNormalizedNameAsync(LookupNormalizer.NormalizeName(adminRoleName));
-            if (adminRole == null)
+            if (adminRole is null)
             {
                 adminRole = new IdentityRole(
                     GuidGenerator.Create(),
