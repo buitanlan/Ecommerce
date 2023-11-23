@@ -15,28 +15,14 @@ using Volo.Abp.TenantManagement;
 
 namespace Ecommerce.Data;
 
-public class EcommerceDbMigrationService : ITransientDependency
+public class EcommerceDbMigrationService(
+    IDataSeeder dataSeeder,
+    IEnumerable<IEcommerceDbSchemaMigrator> dbSchemaMigrators,
+    ITenantRepository tenantRepository,
+    ICurrentTenant currentTenant)
+    : ITransientDependency
 {
-    public ILogger<EcommerceDbMigrationService> Logger { get; set; }
-
-    private readonly IDataSeeder _dataSeeder;
-    private readonly IEnumerable<IEcommerceDbSchemaMigrator> _dbSchemaMigrators;
-    private readonly ITenantRepository _tenantRepository;
-    private readonly ICurrentTenant _currentTenant;
-
-    public EcommerceDbMigrationService(
-        IDataSeeder dataSeeder,
-        IEnumerable<IEcommerceDbSchemaMigrator> dbSchemaMigrators,
-        ITenantRepository tenantRepository,
-        ICurrentTenant currentTenant)
-    {
-        _dataSeeder = dataSeeder;
-        _dbSchemaMigrators = dbSchemaMigrators;
-        _tenantRepository = tenantRepository;
-        _currentTenant = currentTenant;
-
-        Logger = NullLogger<EcommerceDbMigrationService>.Instance;
-    }
+    private ILogger<EcommerceDbMigrationService> Logger { get; set; } = NullLogger<EcommerceDbMigrationService>.Instance;
 
     public async Task MigrateAsync()
     {
@@ -54,12 +40,12 @@ public class EcommerceDbMigrationService : ITransientDependency
 
         Logger.LogInformation($"Successfully completed host database migrations.");
 
-        var tenants = await _tenantRepository.GetListAsync(includeDetails: true);
+        var tenants = await tenantRepository.GetListAsync(includeDetails: true);
 
         var migratedDatabaseSchemas = new HashSet<string>();
         foreach (var tenant in tenants)
         {
-            using (_currentTenant.Change(tenant.Id))
+            using (currentTenant.Change(tenant.Id))
             {
                 if (tenant.ConnectionStrings.Any())
                 {
@@ -90,7 +76,7 @@ public class EcommerceDbMigrationService : ITransientDependency
         Logger.LogInformation(
             $"Migrating schema for {(tenant is null ? "host" : tenant.Name + " tenant")} database...");
 
-        foreach (var migrator in _dbSchemaMigrators)
+        foreach (var migrator in dbSchemaMigrators)
         {
             await migrator.MigrateAsync();
         }
@@ -100,7 +86,7 @@ public class EcommerceDbMigrationService : ITransientDependency
     {
         Logger.LogInformation($"Executing {(tenant is null ? "host" : tenant.Name + " tenant")} database seed...");
 
-        await _dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
+        await dataSeeder.SeedAsync(new DataSeedContext(tenant?.Id)
             .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName, IdentityDataSeedContributor.AdminEmailDefaultValue)
             .WithProperty(IdentityDataSeedContributor.AdminPasswordPropertyName, IdentityDataSeedContributor.AdminPasswordDefaultValue)
         );

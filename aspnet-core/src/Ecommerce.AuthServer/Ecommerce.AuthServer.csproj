@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Ecommerce</RootNamespace>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -27,25 +27,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
-    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="7.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.0" />
     <PackageReference Include="DistributedLock.Redis" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" Version="2.3.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite" Version="3.0.0-rc.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Autofac" Version="7.3.0" />
-    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="7.3.0" />
-    <PackageReference Include="Volo.Abp.DistributedLocking" Version="7.3.0" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="7.3.0" />
-    <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="7.3.0" />
-    <PackageReference Include="Volo.Abp.Account.Application" Version="7.3.0" />
-    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="7.3.0" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.DistributedLocking" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.Account.Application" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="8.0.0-rc.1" />
     <ProjectReference Include="..\Ecommerce.EntityFrameworkCore\Ecommerce.EntityFrameworkCore.csproj" />
   </ItemGroup>
 

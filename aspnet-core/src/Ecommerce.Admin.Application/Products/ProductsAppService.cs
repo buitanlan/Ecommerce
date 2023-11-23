@@ -17,52 +17,27 @@ using Volo.Abp.Domain.Repositories;
 namespace Ecommerce.Admin.Products;
 
 [Authorize]
-public partial class ProductsAppService : CrudAppService<
-        Product,
-        ProductDto,
-        Guid,
-        PagedResultRequestDto,
-        CreateUpdateProductDto,
-        CreateUpdateProductDto>,
-    IProductsAppService
+public partial class ProductsAppService(
+    IRepository<Product, Guid> repository,
+    IRepository<ProductCategory> productCategoryRepository,
+    ProductManager productManager,
+    IBlobContainer<ProductThumbnailPictureContainer> fileContainer,
+    ProductCodeGenerator productCodeGenerator,
+    IRepository<ProductAttribute> productAttributeRepository,
+    IRepository<ProductAttributeDecimal> productAttributeDecimalRepository,
+    IRepository<ProductAttributeInt> productAttributeIntRepository,
+    IRepository<ProductAttributeDateTime> productAttributeDateTimeRepository,
+    IRepository<ProductAttributeVarchar> productAttributeVarcharRepository,
+    IRepository<ProductAttributeText> productAttributeTextRepository)
+    : CrudAppService<
+            Product,
+            ProductDto,
+            Guid,
+            PagedResultRequestDto,
+            CreateUpdateProductDto,
+            CreateUpdateProductDto>(repository),
+        IProductsAppService
 {
-    private readonly IBlobContainer<ProductThumbnailPictureContainer> _fileContainer;
-    private readonly IRepository<ProductAttributeDateTime> _productAttributeDateTimeRepository;
-    private readonly IRepository<ProductAttributeDecimal> _productAttributeDecimalRepository;
-    private readonly IRepository<ProductAttributeInt> _productAttributeIntRepository;
-    private readonly IRepository<ProductAttribute> _productAttributeRepository;
-    private readonly IRepository<ProductAttributeText> _productAttributeTextRepository;
-    private readonly IRepository<ProductAttributeVarchar> _productAttributeVarcharRepository;
-    private readonly IRepository<ProductCategory> _productCategoryRepository;
-    private readonly ProductCodeGenerator _productCodeGenerator;
-    private readonly ProductManager _productManager;
-
-    public ProductsAppService(
-        IRepository<Product, Guid> repository,
-        IRepository<ProductCategory> productCategoryRepository,
-        ProductManager productManager,
-        IBlobContainer<ProductThumbnailPictureContainer> fileContainer,
-        ProductCodeGenerator productCodeGenerator,
-        IRepository<ProductAttribute> productAttributeRepository,
-        IRepository<ProductAttributeDecimal> productAttributeDecimalRepository,
-        IRepository<ProductAttributeInt> productAttributeIntRepository,
-        IRepository<ProductAttributeDateTime> productAttributeDateTimeRepository,
-        IRepository<ProductAttributeVarchar> productAttributeVarcharRepository,
-        IRepository<ProductAttributeText> productAttributeTextRepository)
-        : base(repository)
-    {
-        _productManager = productManager;
-        _productCategoryRepository = productCategoryRepository;
-        _fileContainer = fileContainer;
-        _productCodeGenerator = productCodeGenerator;
-        _productAttributeRepository = productAttributeRepository;
-        _productAttributeDecimalRepository = productAttributeDecimalRepository;
-        _productAttributeIntRepository = productAttributeIntRepository;
-        _productAttributeDateTimeRepository = productAttributeDateTimeRepository;
-        _productAttributeVarcharRepository = productAttributeVarcharRepository;
-        _productAttributeTextRepository = productAttributeTextRepository;
-    }
-
     public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -86,7 +61,7 @@ public partial class ProductsAppService : CrudAppService<
 
     public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
     {
-        var product = await _productManager.CreateAsync(
+        var product = await productManager.CreateAsync(
             input.ManufacturerId,
             input.Name,
             input.Code,
@@ -133,7 +108,7 @@ public partial class ProductsAppService : CrudAppService<
         if (product.CategoryId != input.CategoryId)
         {
             product.CategoryId = input.CategoryId;
-            var category = await _productCategoryRepository.GetAsync(x => x.Id == input.CategoryId);
+            var category = await productCategoryRepository.GetAsync(x => x.Id == input.CategoryId);
             product.CategoryName = category.Name;
             product.CategorySlug = category.Slug;
         }
@@ -165,7 +140,7 @@ public partial class ProductsAppService : CrudAppService<
             return null;
         }
 
-        var thumbnailContent = await _fileContainer.GetAllBytesOrNullAsync(fileName);
+        var thumbnailContent = await fileContainer.GetAllBytesOrNullAsync(fileName);
 
         if (thumbnailContent is null)
         {
@@ -178,14 +153,14 @@ public partial class ProductsAppService : CrudAppService<
 
     public async Task<string> GetSuggestNewCodeAsync()
     {
-        return await _productCodeGenerator.GenerateAsync();
+        return await productCodeGenerator.GenerateAsync();
     }
     private async Task SaveThumbnailImageAsync(string fileName, string base64)
     {
         var regex = ThumbnailRegex();
         base64 = regex.Replace(base64, string.Empty);
         var bytes = Convert.FromBase64String(base64);
-        await _fileContainer.SaveAsync(fileName, bytes, true);
+        await fileContainer.SaveAsync(fileName, bytes, true);
     }
 
     [GeneratedRegex("^[\\w/\\:.-]+;base64,")]
@@ -199,7 +174,7 @@ public partial class ProductsAppService : CrudAppService<
             throw new BusinessException(EcommerceDomainErrorCodes.ProductIsNotExists);
         }
 
-        var attribute = await _productAttributeRepository.GetAsync(x => x.Id == input.AttributeId);
+        var attribute = await productAttributeRepository.GetAsync(x => x.Id == input.AttributeId);
         if (attribute is null)
         {
             throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
@@ -216,7 +191,7 @@ public partial class ProductsAppService : CrudAppService<
 
                 var productAttributeDateTime = new ProductAttributeDateTime(newAttributeId, input.AttributeId,
                     input.ProductId, input.DateTimeValue);
-                await _productAttributeDateTimeRepository.InsertAsync(productAttributeDateTime);
+                await productAttributeDateTimeRepository.InsertAsync(productAttributeDateTime);
                 break;
             case AttributeType.Int:
                 if (input.IntValue is null)
@@ -226,7 +201,7 @@ public partial class ProductsAppService : CrudAppService<
 
                 var productAttributeInt = new ProductAttributeInt(newAttributeId, input.AttributeId, input.ProductId,
                     input.IntValue.Value);
-                await _productAttributeIntRepository.InsertAsync(productAttributeInt);
+                await productAttributeIntRepository.InsertAsync(productAttributeInt);
                 break;
             case AttributeType.Decimal:
                 if (input.DecimalValue is null)
@@ -236,7 +211,7 @@ public partial class ProductsAppService : CrudAppService<
 
                 var productAttributeDecimal = new ProductAttributeDecimal(newAttributeId, input.AttributeId,
                     input.ProductId, input.DecimalValue.Value);
-                await _productAttributeDecimalRepository.InsertAsync(productAttributeDecimal);
+                await productAttributeDecimalRepository.InsertAsync(productAttributeDecimal);
                 break;
             case AttributeType.Varchar:
                 if (input.VarcharValue is null)
@@ -246,7 +221,7 @@ public partial class ProductsAppService : CrudAppService<
 
                 var productAttributeVarchar = new ProductAttributeVarchar(newAttributeId, input.AttributeId,
                     input.ProductId, input.VarcharValue);
-                await _productAttributeVarcharRepository.InsertAsync(productAttributeVarchar);
+                await productAttributeVarcharRepository.InsertAsync(productAttributeVarchar);
                 break;
             case AttributeType.Text:
                 if (input.TextValue is null)
@@ -256,7 +231,7 @@ public partial class ProductsAppService : CrudAppService<
 
                 var productAttributeText =
                     new ProductAttributeText(newAttributeId, input.AttributeId, input.ProductId, input.TextValue);
-                await _productAttributeTextRepository.InsertAsync(productAttributeText);
+                await productAttributeTextRepository.InsertAsync(productAttributeText);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -280,7 +255,7 @@ public partial class ProductsAppService : CrudAppService<
 
     public async Task RemoveProductAttributeAsync(Guid attributeId, Guid id)
     {
-        var attribute = await _productAttributeRepository.GetAsync(x => x.Id == attributeId);
+        var attribute = await productAttributeRepository.GetAsync(x => x.Id == attributeId);
         if (attribute is null)
         {
             throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
@@ -289,50 +264,50 @@ public partial class ProductsAppService : CrudAppService<
         switch (attribute.DataType)
         {
             case AttributeType.Date:
-                var productAttributeDateTime = await _productAttributeDateTimeRepository.GetAsync(x => x.Id == id);
+                var productAttributeDateTime = await productAttributeDateTimeRepository.GetAsync(x => x.Id == id);
                 if (productAttributeDateTime is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
-                await _productAttributeDateTimeRepository.DeleteAsync(productAttributeDateTime);
+                await productAttributeDateTimeRepository.DeleteAsync(productAttributeDateTime);
                 break;
             case AttributeType.Int:
 
-                var productAttributeInt = await _productAttributeIntRepository.GetAsync(x => x.Id == id);
+                var productAttributeInt = await productAttributeIntRepository.GetAsync(x => x.Id == id);
                 if (productAttributeInt is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
-                await _productAttributeIntRepository.DeleteAsync(productAttributeInt);
+                await productAttributeIntRepository.DeleteAsync(productAttributeInt);
                 break;
             case AttributeType.Decimal:
-                var productAttributeDecimal = await _productAttributeDecimalRepository.GetAsync(x => x.Id == id);
+                var productAttributeDecimal = await productAttributeDecimalRepository.GetAsync(x => x.Id == id);
                 if (productAttributeDecimal is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
-                await _productAttributeDecimalRepository.DeleteAsync(productAttributeDecimal);
+                await productAttributeDecimalRepository.DeleteAsync(productAttributeDecimal);
                 break;
             case AttributeType.Varchar:
-                var productAttributeVarchar = await _productAttributeVarcharRepository.GetAsync(x => x.Id == id);
+                var productAttributeVarchar = await productAttributeVarcharRepository.GetAsync(x => x.Id == id);
                 if (productAttributeVarchar is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
-                await _productAttributeVarcharRepository.DeleteAsync(productAttributeVarchar);
+                await productAttributeVarcharRepository.DeleteAsync(productAttributeVarchar);
                 break;
             case AttributeType.Text:
-                var productAttributeText = await _productAttributeTextRepository.GetAsync(x => x.Id == id);
+                var productAttributeText = await productAttributeTextRepository.GetAsync(x => x.Id == id);
                 if (productAttributeText is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
-                await _productAttributeTextRepository.DeleteAsync(productAttributeText);
+                await productAttributeTextRepository.DeleteAsync(productAttributeText);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -343,13 +318,13 @@ public partial class ProductsAppService : CrudAppService<
 
     public async Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId)
     {
-        var attributeQuery = await _productAttributeRepository.GetQueryableAsync();
+        var attributeQuery = await productAttributeRepository.GetQueryableAsync();
 
-        var attributeDateTimeQuery = await _productAttributeDateTimeRepository.GetQueryableAsync();
-        var attributeDecimalQuery = await _productAttributeDecimalRepository.GetQueryableAsync();
-        var attributeIntQuery = await _productAttributeIntRepository.GetQueryableAsync();
-        var attributeVarcharQuery = await _productAttributeVarcharRepository.GetQueryableAsync();
-        var attributeTextQuery = await _productAttributeTextRepository.GetQueryableAsync();
+        var attributeDateTimeQuery = await productAttributeDateTimeRepository.GetQueryableAsync();
+        var attributeDecimalQuery = await productAttributeDecimalRepository.GetQueryableAsync();
+        var attributeIntQuery = await productAttributeIntRepository.GetQueryableAsync();
+        var attributeVarcharQuery = await productAttributeVarcharRepository.GetQueryableAsync();
+        var attributeTextQuery = await productAttributeTextRepository.GetQueryableAsync();
 
         var query = from a in attributeQuery
             join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTabke
@@ -390,13 +365,13 @@ public partial class ProductsAppService : CrudAppService<
     public async Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributesAsync(
         ProductAttributeListFilterDto input)
     {
-        var attributeQuery = await _productAttributeRepository.GetQueryableAsync();
+        var attributeQuery = await productAttributeRepository.GetQueryableAsync();
 
-        var attributeDateTimeQuery = await _productAttributeDateTimeRepository.GetQueryableAsync();
-        var attributeDecimalQuery = await _productAttributeDecimalRepository.GetQueryableAsync();
-        var attributeIntQuery = await _productAttributeIntRepository.GetQueryableAsync();
-        var attributeVarcharQuery = await _productAttributeVarcharRepository.GetQueryableAsync();
-        var attributeTextQuery = await _productAttributeTextRepository.GetQueryableAsync();
+        var attributeDateTimeQuery = await productAttributeDateTimeRepository.GetQueryableAsync();
+        var attributeDecimalQuery = await productAttributeDecimalRepository.GetQueryableAsync();
+        var attributeIntQuery = await productAttributeIntRepository.GetQueryableAsync();
+        var attributeVarcharQuery = await productAttributeVarcharRepository.GetQueryableAsync();
+        var attributeTextQuery = await productAttributeTextRepository.GetQueryableAsync();
 
         var query = from a in attributeQuery
             join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTabke
@@ -448,7 +423,7 @@ public partial class ProductsAppService : CrudAppService<
             throw new BusinessException(EcommerceDomainErrorCodes.ProductIsNotExists);
         }
 
-        var attribute = await _productAttributeRepository.GetAsync(x => x.Id == input.AttributeId);
+        var attribute = await productAttributeRepository.GetAsync(x => x.Id == input.AttributeId);
         if (attribute is null)
         {
             throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
@@ -462,14 +437,14 @@ public partial class ProductsAppService : CrudAppService<
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeValueIsNotValid);
                 }
 
-                var productAttributeDateTime = await _productAttributeDateTimeRepository.GetAsync(x => x.Id == id);
+                var productAttributeDateTime = await productAttributeDateTimeRepository.GetAsync(x => x.Id == id);
                 if (productAttributeDateTime is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
                 productAttributeDateTime.Value = input.DateTimeValue.Value;
-                await _productAttributeDateTimeRepository.UpdateAsync(productAttributeDateTime);
+                await productAttributeDateTimeRepository.UpdateAsync(productAttributeDateTime);
                 break;
             case AttributeType.Int:
                 if (input.IntValue is null)
@@ -477,14 +452,14 @@ public partial class ProductsAppService : CrudAppService<
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeValueIsNotValid);
                 }
 
-                var productAttributeInt = await _productAttributeIntRepository.GetAsync(x => x.Id == id);
+                var productAttributeInt = await productAttributeIntRepository.GetAsync(x => x.Id == id);
                 if (productAttributeInt is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
                 productAttributeInt.Value = input.IntValue.Value;
-                await _productAttributeIntRepository.UpdateAsync(productAttributeInt);
+                await productAttributeIntRepository.UpdateAsync(productAttributeInt);
                 break;
             case AttributeType.Decimal:
                 if (input.DecimalValue is null)
@@ -492,14 +467,14 @@ public partial class ProductsAppService : CrudAppService<
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeValueIsNotValid);
                 }
 
-                var productAttributeDecimal = await _productAttributeDecimalRepository.GetAsync(x => x.Id == id);
+                var productAttributeDecimal = await productAttributeDecimalRepository.GetAsync(x => x.Id == id);
                 if (productAttributeDecimal is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
                 productAttributeDecimal.Value = input.DecimalValue.Value;
-                await _productAttributeDecimalRepository.UpdateAsync(productAttributeDecimal);
+                await productAttributeDecimalRepository.UpdateAsync(productAttributeDecimal);
                 break;
             case AttributeType.Varchar:
                 if (input.VarcharValue is null)
@@ -507,14 +482,14 @@ public partial class ProductsAppService : CrudAppService<
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeValueIsNotValid);
                 }
 
-                var productAttributeVarchar = await _productAttributeVarcharRepository.GetAsync(x => x.Id == id);
+                var productAttributeVarchar = await productAttributeVarcharRepository.GetAsync(x => x.Id == id);
                 if (productAttributeVarchar is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
                 productAttributeVarchar.Value = input.VarcharValue;
-                await _productAttributeVarcharRepository.UpdateAsync(productAttributeVarchar);
+                await productAttributeVarcharRepository.UpdateAsync(productAttributeVarchar);
                 break;
             case AttributeType.Text:
                 if (input.TextValue is null)
@@ -522,14 +497,14 @@ public partial class ProductsAppService : CrudAppService<
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeValueIsNotValid);
                 }
 
-                var productAttributeText = await _productAttributeTextRepository.GetAsync(x => x.Id == id);
+                var productAttributeText = await productAttributeTextRepository.GetAsync(x => x.Id == id);
                 if (productAttributeText is null)
                 {
                     throw new BusinessException(EcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                 }
 
                 productAttributeText.Value = input.TextValue;
-                await _productAttributeTextRepository.UpdateAsync(productAttributeText);
+                await productAttributeTextRepository.UpdateAsync(productAttributeText);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

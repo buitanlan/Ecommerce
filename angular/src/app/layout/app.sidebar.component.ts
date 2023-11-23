@@ -9,5 +9,8 @@ import { AppMenuComponent } from './app.menu.component';
   standalone: true,
 })
 export class AppSidebarComponent {
-  constructor(public layoutService: LayoutService, public el: ElementRef) {}
+  constructor(
+    public layoutService: LayoutService,
+    public el: ElementRef,
+  ) {}
 }

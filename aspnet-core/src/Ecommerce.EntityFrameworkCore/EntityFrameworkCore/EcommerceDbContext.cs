@@ -36,8 +36,8 @@ namespace Ecommerce.EntityFrameworkCore;
 [ReplaceDbContext(typeof(IIdentityDbContext))]
 [ReplaceDbContext(typeof(ITenantManagementDbContext))]
 [ConnectionStringName("Default")]
-public class EcommerceDbContext :
-    AbpDbContext<EcommerceDbContext>,
+public class EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) :
+    AbpDbContext<EcommerceDbContext>(options),
     IIdentityDbContext,
     ITenantManagementDbContext
 {
@@ -98,12 +98,6 @@ public class EcommerceDbContext :
     public DbSet<IdentitySetting> IdentitySettings { get; set; }
 
     #endregion
-
-    public EcommerceDbContext(DbContextOptions<EcommerceDbContext> options)
-        : base(options)
-    {
-
-    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -19,28 +19,14 @@ namespace Ecommerce.OpenIddict;
 /* Creates initial data that is needed to property run the application
  * and make client-to-server communication possible.
  */
-public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDependency
+public class OpenIddictDataSeedContributor(
+    IConfiguration configuration,
+    IAbpApplicationManager applicationManager,
+    IOpenIddictScopeManager scopeManager,
+    IPermissionDataSeeder permissionDataSeeder,
+    IStringLocalizer<OpenIddictResponse> l)
+    : IDataSeedContributor, ITransientDependency
 {
-    private readonly IConfiguration _configuration;
-    private readonly IAbpApplicationManager _applicationManager;
-    private readonly IOpenIddictScopeManager _scopeManager;
-    private readonly IPermissionDataSeeder _permissionDataSeeder;
-    private readonly IStringLocalizer<OpenIddictResponse> _l;
-
-    public OpenIddictDataSeedContributor(
-        IConfiguration configuration,
-        IAbpApplicationManager applicationManager,
-        IOpenIddictScopeManager scopeManager,
-        IPermissionDataSeeder permissionDataSeeder,
-        IStringLocalizer<OpenIddictResponse> l)
-    {
-        _configuration = configuration;
-        _applicationManager = applicationManager;
-        _scopeManager = scopeManager;
-        _permissionDataSeeder = permissionDataSeeder;
-        _l = l;
-    }
-
     [UnitOfWork]
     public virtual async Task SeedAsync(DataSeedContext context)
     {
@@ -50,9 +36,9 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
     private async Task CreateScopesAsync()
     {
-        if (await _scopeManager.FindByNameAsync("Ecommerce") is null)
+        if (await scopeManager.FindByNameAsync("Ecommerce") is null)
         {
-            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
                 Name = "Ecommerce",
                 DisplayName = "Ecommerce API",
@@ -63,9 +49,9 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             });
         }
         
-        if (await _scopeManager.FindByNameAsync("Ecommerce.Admin") is null)
+        if (await scopeManager.FindByNameAsync("Ecommerce.Admin") is null)
         {
-            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
                 Name = "Ecommerce.Admin",
                 DisplayName = "Ecommerce Admin API",
@@ -96,7 +82,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         clientScopes.AddRange(commonScopes);
         clientScopes.Add("Ecommerce");
 
-        var configurationSection = _configuration.GetSection("OpenIddict:Applications");
+        var configurationSection = configuration.GetSection("OpenIddict:Applications");
 
         //Admin Client
         var webAdminClientId = configurationSection["Ecommerce_Admin:ClientId"];
@@ -183,21 +169,21 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
     {
         if (!string.IsNullOrEmpty(secret) && string.Equals(type, OpenIddictConstants.ClientTypes.Public, StringComparison.OrdinalIgnoreCase))
         {
-            throw new BusinessException(_l["NoClientSecretCanBeSetForPublicApplications"]);
+            throw new BusinessException(l["NoClientSecretCanBeSetForPublicApplications"]);
         }
 
         if (string.IsNullOrEmpty(secret) && string.Equals(type, OpenIddictConstants.ClientTypes.Confidential, StringComparison.OrdinalIgnoreCase))
         {
-            throw new BusinessException(_l["TheClientSecretIsRequiredForConfidentialApplications"]);
+            throw new BusinessException(l["TheClientSecretIsRequiredForConfidentialApplications"]);
         }
 
-        if (!string.IsNullOrEmpty(name) && await _applicationManager.FindByClientIdAsync(name) != null)
+        if (!string.IsNullOrEmpty(name) && await applicationManager.FindByClientIdAsync(name) != null)
         {
             return;
             //throw new BusinessException(L["TheClientIdentifierIsAlreadyTakenByAnotherApplication"]);
         }
 
-        var client = await _applicationManager.FindByClientIdAsync(name);
+        var client = await applicationManager.FindByClientIdAsync(name);
         if (client is null)
         {
             var application = new AbpApplicationDescriptor
@@ -316,7 +302,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 {
                     if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
                     {
-                        throw new BusinessException(_l["InvalidRedirectUri", redirectUri]);
+                        throw new BusinessException(l["InvalidRedirectUri", redirectUri]);
                     }
 
                     if (application.RedirectUris.All(x => x != uri))
@@ -332,7 +318,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 {
                     if (!Uri.TryCreate(postLogoutRedirectUri, UriKind.Absolute, out var uri) || !uri.IsWellFormedOriginalString())
                     {
-                        throw new BusinessException(_l["InvalidPostLogoutRedirectUri", postLogoutRedirectUri]);
+                        throw new BusinessException(l["InvalidPostLogoutRedirectUri", postLogoutRedirectUri]);
                     }
 
                     if (application.PostLogoutRedirectUris.All(x => x != uri))
@@ -344,7 +330,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
 
             if (permissions != null)
             {
-                await _permissionDataSeeder.SeedAsync(
+                await permissionDataSeeder.SeedAsync(
                     ClientPermissionValueProvider.ProviderName,
                     name,
                     permissions,
@@ -352,7 +338,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 );
             }
 
-            await _applicationManager.CreateAsync(application);
+            await applicationManager.CreateAsync(application);
         }
     }
 }

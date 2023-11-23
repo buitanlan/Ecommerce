@@ -11,19 +11,14 @@ using Volo.Abp.Domain.Repositories;
 namespace Ecommerce.Admin.Manufacturers;
 
 [Authorize]
-public class ManufacturersAppService : CrudAppService<
+public class ManufacturersAppService(IRepository<Manufacturer, Guid> repository) : CrudAppService<
     Manufacturer,
     ManufacturerDto,
     Guid,
     PagedResultRequestDto,
     CreateUpdateManufacturerDto,
-    CreateUpdateManufacturerDto>, IManufacturersAppService
+    CreateUpdateManufacturerDto>(repository), IManufacturersAppService
 {
-    public ManufacturersAppService(IRepository<Manufacturer, Guid> repository)
-        : base(repository)
-    {
-    }
-
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);

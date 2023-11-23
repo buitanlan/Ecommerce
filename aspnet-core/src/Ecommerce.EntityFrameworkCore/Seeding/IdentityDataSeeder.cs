@@ -10,47 +10,28 @@ using Volo.Abp.Uow;
 
 namespace Ecommerce.Seeding;
 
-public class IdentityDataSeeder : ITransientDependency, IIdentityDataSeeder
+public class IdentityDataSeeder(
+    IGuidGenerator guidGenerator,
+    IIdentityRoleRepository roleRepository,
+    IIdentityUserRepository userRepository,
+    ILookupNormalizer lookupNormalizer,
+    IdentityUserManager userManager,
+    IdentityRoleManager roleManager,
+    ICurrentTenant currentTenant,
+    IOptions<IdentityOptions> identityOptions)
+    : ITransientDependency, IIdentityDataSeeder
 {
-    protected IGuidGenerator GuidGenerator { get; }
-    protected IIdentityRoleRepository RoleRepository { get; }
-    protected IIdentityUserRepository UserRepository { get; }
-    protected ILookupNormalizer LookupNormalizer { get; }
-    protected IdentityUserManager UserManager { get; }
-    protected IdentityRoleManager RoleManager { get; }
-    protected ICurrentTenant CurrentTenant { get; }
-    protected IOptions<IdentityOptions> IdentityOptions { get; }
-
-    public IdentityDataSeeder(
-        IGuidGenerator guidGenerator,
-        IIdentityRoleRepository roleRepository,
-        IIdentityUserRepository userRepository,
-        ILookupNormalizer lookupNormalizer,
-        IdentityUserManager userManager,
-        IdentityRoleManager roleManager,
-        ICurrentTenant currentTenant,
-        IOptions<IdentityOptions> identityOptions)
-    {
-        GuidGenerator = guidGenerator;
-        RoleRepository = roleRepository;
-        UserRepository = userRepository;
-        LookupNormalizer = lookupNormalizer;
-        UserManager = userManager;
-        RoleManager = roleManager;
-        CurrentTenant = currentTenant;
-        IdentityOptions = identityOptions;
-    }
     [UnitOfWork]
     public virtual async Task<IdentityDataSeedResult> SeedAsync(string adminEmail, string adminPassword, Guid? tenantId = null)
     {
-        using (CurrentTenant.Change(tenantId))
+        using (currentTenant.Change(tenantId))
         {
-            await IdentityOptions.SetAsync();
+            await identityOptions.SetAsync();
 
             var result = new IdentityDataSeedResult();
             //"admin" user
-            var adminUser = await UserRepository.FindByNormalizedUserNameAsync(
-                LookupNormalizer.NormalizeName(adminEmail)
+            var adminUser = await userRepository.FindByNormalizedUserNameAsync(
+                lookupNormalizer.NormalizeName(adminEmail)
             );
 
             if (adminUser != null)
@@ -59,7 +40,7 @@ public class IdentityDataSeeder : ITransientDependency, IIdentityDataSeeder
             }
 
             adminUser = new IdentityUser(
-                GuidGenerator.Create(),
+                guidGenerator.Create(),
                 adminEmail,
                 adminEmail,
                 tenantId
@@ -68,17 +49,17 @@ public class IdentityDataSeeder : ITransientDependency, IIdentityDataSeeder
                 Name = "Admin"
             };
 
-            (await UserManager.CreateAsync(adminUser, adminPassword, validatePassword: false)).CheckErrors();
+            (await userManager.CreateAsync(adminUser, adminPassword, validatePassword: false)).CheckErrors();
             result.CreatedAdminUser = true;
 
             //"admin" role
             const string adminRoleName = "Admin";
             var adminRole =
-                await RoleRepository.FindByNormalizedNameAsync(LookupNormalizer.NormalizeName(adminRoleName));
+                await roleRepository.FindByNormalizedNameAsync(lookupNormalizer.NormalizeName(adminRoleName));
             if (adminRole is null)
             {
                 adminRole = new IdentityRole(
-                    GuidGenerator.Create(),
+                    guidGenerator.Create(),
                     adminRoleName,
                     tenantId
                 )
@@ -87,11 +68,11 @@ public class IdentityDataSeeder : ITransientDependency, IIdentityDataSeeder
                     IsPublic = true
                 };
 
-                (await RoleManager.CreateAsync(adminRole)).CheckErrors();
+                (await roleManager.CreateAsync(adminRole)).CheckErrors();
                 result.CreatedAdminRole = true;
             }
 
-            (await UserManager.AddToRoleAsync(adminUser, adminRoleName)).CheckErrors();
+            (await userManager.AddToRoleAsync(adminUser, adminRoleName)).CheckErrors();
 
             return result;
         }
