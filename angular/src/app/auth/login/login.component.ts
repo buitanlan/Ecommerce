@@ -116,15 +116,17 @@ export class LoginComponent {
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
+
   login() {
     const request: LoginRequestDto = {
-      username: this.loginForm.controls['username'].value!,
-      password: this.loginForm.controls['password'].value!,
+      username: this.loginForm.controls.username.value!,
+      password: this.loginForm.controls.password.value!,
     };
+
     this.authService
       .login(request)
       .pipe(takeUntil(this.destroy.destroy$))
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         localStorage.setItem(ACCESS_TOKEN, res.access_token);
         localStorage.setItem(REFRESH_TOKEN, res.refresh_token);
         void this.router.navigate(['']);

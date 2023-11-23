@@ -5,21 +5,16 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Products;
 
-public class ProductCodeGenerator : ITransientDependency
+public class ProductCodeGenerator(IRepository<IdentitySetting, string> identitySettingRepository)
+    : ITransientDependency
 {
-    private readonly IRepository<IdentitySetting, string> _identitySettingRepository;
-
-    public ProductCodeGenerator(IRepository<IdentitySetting, string> identitySettingRepository)
-    {
-        _identitySettingRepository = identitySettingRepository;
-    }
     public async Task<string> GenerateAsync()
     {
         string newCode;
-        var identitySetting = await _identitySettingRepository.FindAsync(EcommerceConsts.ProductIdentitySettingId);
+        var identitySetting = await identitySettingRepository.FindAsync(EcommerceConsts.ProductIdentitySettingId);
         if (identitySetting is null)
         {
-            identitySetting = await _identitySettingRepository.InsertAsync(new IdentitySetting(EcommerceConsts.ProductIdentitySettingId, "Sản phẩm", EcommerceConsts.ProductIdentitySettingPrefix, 1, 1));
+            identitySetting = await identitySettingRepository.InsertAsync(new IdentitySetting(EcommerceConsts.ProductIdentitySettingId, "Sản phẩm", EcommerceConsts.ProductIdentitySettingPrefix, 1, 1));
             newCode = identitySetting.Prefix + identitySetting.CurrentNumber;
 
         }
@@ -28,7 +23,7 @@ public class ProductCodeGenerator : ITransientDependency
             identitySetting.CurrentNumber += identitySetting.StepNumber;
             newCode = identitySetting.Prefix + identitySetting.CurrentNumber;
 
-            await _identitySettingRepository.UpdateAsync(identitySetting);
+            await identitySettingRepository.UpdateAsync(identitySetting);
         }
         return newCode;
     }

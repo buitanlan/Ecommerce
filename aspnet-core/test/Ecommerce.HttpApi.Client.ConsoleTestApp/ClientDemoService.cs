@@ -5,18 +5,11 @@ using Volo.Abp.DependencyInjection;
 
 namespace Ecommerce.HttpApi.Client.ConsoleTestApp;
 
-public class ClientDemoService : ITransientDependency
+public class ClientDemoService(IProfileAppService profileAppService) : ITransientDependency
 {
-    private readonly IProfileAppService _profileAppService;
-
-    public ClientDemoService(IProfileAppService profileAppService)
-    {
-        _profileAppService = profileAppService;
-    }
-
     public async Task RunAsync()
     {
-        var output = await _profileAppService.GetAsync();
+        var output = await profileAppService.GetAsync();
         Console.WriteLine($"UserName : {output.UserName}");
         Console.WriteLine($"Email    : {output.Email}");
         Console.WriteLine($"Name     : {output.Name}");

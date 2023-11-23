@@ -1,14 +1,18 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@abp/aspnetcore.mvc.ui.theme.leptonxlite':
-    specifier: ~2.3.0
-    version: 2.3.0(@popperjs/core@2.11.7)(jquery@3.6.3)
+    specifier: ~2.4.3
+    version: 2.4.3(@popperjs/core@2.11.7)(jquery@3.6.3)
 
 packages:
 
-  /@abp/aspnetcore.mvc.ui.theme.leptonxlite@2.3.0(@popperjs/core@2.11.7)(jquery@3.6.3):
-    resolution: {integrity: sha512-d7p8Pv6g8aocjBIBKHMF8fFDeVzWqkriz6uKy3oowCKSe5tqzq3j35Um7kEu7DapPf9MyBPq8+z9VsGbxJCjww==}
+  /@abp/aspnetcore.mvc.ui.theme.leptonxlite@2.4.3(@popperjs/core@2.11.7)(jquery@3.6.3):
+    resolution: {integrity: sha512-2tDkxVQth6ABfChsgXHnPdWXkFnKWTRNaBZ6DBRfZhm+W0cCB8SxrTYwihOpojD4fdRHktPCXkP5g+N3VRUBsQ==}
     dependencies:
       '@abp/aspnetcore.mvc.ui.theme.shared': 7.2.3(@popperjs/core@2.11.7)(jquery@3.6.3)
     transitivePeerDependencies:

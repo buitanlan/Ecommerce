@@ -11,19 +11,14 @@ using Volo.Abp.Domain.Repositories;
 namespace Ecommerce.Admin.ProductCategories;
 
 [Authorize]
-public class ProductCategoriesAppService: CrudAppService<
+public class ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository) : CrudAppService<
     ProductCategory,
     ProductCategoryDto,
     Guid,
     PagedResultRequestDto,
     CreateUpdateProductCategoryDto,
-    CreateUpdateProductCategoryDto>, IProductCategoriesAppService
+    CreateUpdateProductCategoryDto>(repository), IProductCategoriesAppService
 {
-    public ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository)
-        : base(repository)
-    {
-    }
-
     public async Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();

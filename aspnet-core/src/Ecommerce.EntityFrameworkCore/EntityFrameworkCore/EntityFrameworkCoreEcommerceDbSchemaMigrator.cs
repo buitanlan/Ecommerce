@@ -8,16 +8,8 @@ using Volo.Abp.DependencyInjection;
 namespace Ecommerce.EntityFrameworkCore;
 
 public class EntityFrameworkCoreEcommerceDbSchemaMigrator
-    : IEcommerceDbSchemaMigrator, ITransientDependency
+    (IServiceProvider serviceProvider) : IEcommerceDbSchemaMigrator, ITransientDependency
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public EntityFrameworkCoreEcommerceDbSchemaMigrator(
-        IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-
     public async Task MigrateAsync()
     {
         /* We intentionally resolving the EcommerceDbContext
@@ -26,7 +18,7 @@ public class EntityFrameworkCoreEcommerceDbSchemaMigrator
          * current scope.
          */
 
-        await _serviceProvider
+        await serviceProvider
             .GetRequiredService<EcommerceDbContext>()
             .Database
             .MigrateAsync();

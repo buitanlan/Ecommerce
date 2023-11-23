@@ -11,11 +11,11 @@ import { AuthService } from '../shared/services/auth.service';
 })
 export class AppComponent {
   menuMode = 'static';
-  private readonly primengConfig = inject(PrimeNGConfig);
+  readonly #primengConfig = inject(PrimeNGConfig);
   private readonly authService = inject(AuthService);
 
   ngOnInit() {
-    this.primengConfig.ripple = true;
+    this.#primengConfig.ripple = true;
     document.documentElement.style.fontSize = '14px';
   }
 }

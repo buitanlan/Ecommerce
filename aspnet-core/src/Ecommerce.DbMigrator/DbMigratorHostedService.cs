@@ -11,22 +11,14 @@ using Volo.Abp.Data;
 
 namespace Ecommerce.DbMigrator;
 
-public class DbMigratorHostedService : IHostedService
+public class DbMigratorHostedService(IHostApplicationLifetime hostApplicationLifetime, IConfiguration configuration)
+    : IHostedService
 {
-    private readonly IHostApplicationLifetime _hostApplicationLifetime;
-    private readonly IConfiguration _configuration;
-
-    public DbMigratorHostedService(IHostApplicationLifetime hostApplicationLifetime, IConfiguration configuration)
-    {
-        _hostApplicationLifetime = hostApplicationLifetime;
-        _configuration = configuration;
-    }
-
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using var application = await AbpApplicationFactory.CreateAsync<EcommerceDbMigratorModule>(options =>
         {
-            options.Services.ReplaceConfiguration(_configuration);
+            options.Services.ReplaceConfiguration(configuration);
             options.UseAutofac();
             options.Services.AddLogging(c => c.AddSerilog());
             options.AddDataMigrationEnvironment();
@@ -45,7 +37,7 @@ public class DbMigratorHostedService : IHostedService
 
         await application.ShutdownAsync();
 
-        _hostApplicationLifetime.StopApplication();
+        hostApplicationLifetime.StopApplication();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

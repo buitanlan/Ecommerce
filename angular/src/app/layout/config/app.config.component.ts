@@ -32,11 +32,9 @@ import { ButtonModule } from 'primeng/button';
           [disabled]="scale === scales[0]"
         ></button>
         <div class="flex gap-2 align-items-center">
-          <i
-            class="pi pi-circle-fill text-300"
-            *ngFor="let s of scales"
-            [ngClass]="{ 'text-primary-500': s === scale }"
-          ></i>
+          @for (s of scales; track s) {
+            <i class="pi pi-circle-fill text-300" [ngClass]="{ 'text-primary-500': s === scale }"></i>
+          }
         </div>
         <button
           icon="pi pi-plus"
@@ -48,7 +46,7 @@ import { ButtonModule } from 'primeng/button';
         ></button>
       </div>
 
-      <ng-container *ngIf="!minimal">
+      @if (!minimal) {
         <h5>Menu Type</h5>
         <div class="field-radiobutton">
           <p-radioButton name="menuMode" value="static" [(ngModel)]="menuMode" inputId="mode1"></p-radioButton>
@@ -58,9 +56,9 @@ import { ButtonModule } from 'primeng/button';
           <p-radioButton name="menuMode" value="overlay" [(ngModel)]="menuMode" inputId="mode2"></p-radioButton>
           <label for="mode2">Overlay</label>
         </div>
-      </ng-container>
+      }
 
-      <ng-container *ngIf="!minimal">
+      @if (!minimal) {
         <h5>Input Style</h5>
         <div class="flex">
           <div class="field-radiobutton flex-1">
@@ -85,7 +83,7 @@ import { ButtonModule } from 'primeng/button';
 
         <h5>Ripple Effect</h5>
         <p-inputSwitch [(ngModel)]="ripple"></p-inputSwitch>
-      </ng-container>
+      }
 
       <h5>Bootstrap</h5>
       <div class="grid">
@@ -350,7 +348,10 @@ export class AppConfigComponent {
 
   scales: number[] = [12, 13, 14, 15, 16];
 
-  constructor(public layoutService: LayoutService, public menuService: MenuService) {}
+  constructor(
+    public layoutService: LayoutService,
+    public menuService: MenuService,
+  ) {}
 
   get visible(): boolean {
     return this.layoutService.state.configSidebarVisible;
