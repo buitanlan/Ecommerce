@@ -1,6 +1,3 @@
 ﻿namespace Ecommerce;
 
-public abstract class EcommerceApplicationTestBase : EcommerceTestBase<EcommerceApplicationTestModule>
-{
-
-}
+public abstract class EcommerceApplicationTestBase : EcommerceTestBase<EcommerceApplicationTestModule>;

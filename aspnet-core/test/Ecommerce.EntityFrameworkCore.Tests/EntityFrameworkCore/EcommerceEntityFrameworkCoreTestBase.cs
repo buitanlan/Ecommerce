@@ -1,6 +1,3 @@
 ﻿namespace Ecommerce.EntityFrameworkCore;
 
-public abstract class EcommerceEntityFrameworkCoreTestBase : EcommerceTestBase<EcommerceEntityFrameworkCoreTestModule>
-{
-
-}
+public abstract class EcommerceEntityFrameworkCoreTestBase : EcommerceTestBase<EcommerceEntityFrameworkCoreTestModule>;

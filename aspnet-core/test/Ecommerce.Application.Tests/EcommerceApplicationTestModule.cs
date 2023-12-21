@@ -6,7 +6,4 @@ namespace Ecommerce;
     typeof(EcommerceApplicationModule),
     typeof(EcommerceDomainTestModule)
     )]
-public class EcommerceApplicationTestModule : AbpModule
-{
-
-}
+public class EcommerceApplicationTestModule : AbpModule;

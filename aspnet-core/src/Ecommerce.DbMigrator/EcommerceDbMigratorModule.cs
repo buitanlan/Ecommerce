@@ -9,7 +9,4 @@ namespace Ecommerce.DbMigrator;
     typeof(EcommerceEntityFrameworkCoreModule),
     typeof(EcommerceApplicationContractsModule)
     )]
-public class EcommerceDbMigratorModule : AbpModule
-{
-
-}
+public class EcommerceDbMigratorModule : AbpModule;

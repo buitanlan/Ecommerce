@@ -189,7 +189,7 @@ public class OpenIddictDataSeedContributor(
             var application = new AbpApplicationDescriptor
             {
                 ClientId = name,
-                Type = type,
+                ClientType = type,
                 ClientSecret = secret,
                 ConsentType = consentType,
                 DisplayName = displayName,

@@ -3,7 +3,4 @@
 namespace Ecommerce.Localization;
 
 [LocalizationResourceName("Ecommerce")]
-public class EcommerceResource
-{
-
-}
+public class EcommerceResource;

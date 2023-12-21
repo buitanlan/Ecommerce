@@ -39,13 +39,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Autofac" Version="8.0.0-rc.1" />
-    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="8.0.0-rc.1" />
-    <PackageReference Include="Volo.Abp.DistributedLocking" Version="8.0.0-rc.1" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="8.0.0-rc.1" />
-    <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="8.0.0-rc.1" />
-    <PackageReference Include="Volo.Abp.Account.Application" Version="8.0.0-rc.1" />
-    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="8.0.0-rc.1" />
+    <PackageReference Include="Volo.Abp.Autofac" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.DistributedLocking" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.Account.Application" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.Account.HttpApi" Version="8.0.0" />
     <ProjectReference Include="..\Ecommerce.EntityFrameworkCore\Ecommerce.EntityFrameworkCore.csproj" />
   </ItemGroup>
 

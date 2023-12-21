@@ -5,6 +5,7 @@ namespace Ecommerce.Products;
 
 public class ProductAttributeInt : Entity<Guid>
 {
+    ProductAttributeInt() {}
     public ProductAttributeInt(Guid id, Guid attributeId, Guid productId, int value)
     {
         Id = id;

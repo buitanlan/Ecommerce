@@ -14,9 +14,9 @@ public class ProductCodeGenerator(IRepository<IdentitySetting, string> identityS
         var identitySetting = await identitySettingRepository.FindAsync(EcommerceConsts.ProductIdentitySettingId);
         if (identitySetting is null)
         {
-            identitySetting = await identitySettingRepository.InsertAsync(new IdentitySetting(EcommerceConsts.ProductIdentitySettingId, "Sản phẩm", EcommerceConsts.ProductIdentitySettingPrefix, 1, 1));
+            identitySetting = await identitySettingRepository.InsertAsync(new IdentitySetting(
+                EcommerceConsts.ProductIdentitySettingId, "Sản phẩm", EcommerceConsts.ProductIdentitySettingPrefix, 1, 1));
             newCode = identitySetting.Prefix + identitySetting.CurrentNumber;
-
         }
         else
         {
