@@ -66,14 +66,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../../shared/constants/keys.cons
                   >Forgot password?</a
                 >
               </div>
-              <button
-                pButton
-                pRipple
-                label="Đăng nhập"
-                (click)="login()"
-                class="w-full p-3 text-xl"
-                [routerLink]="['/']"
-              ></button>
+              <button pButton pRipple label="Đăng nhập" (click)="login()" class="w-full p-3 text-xl"></button>
             </div>
           </div>
         </div>
