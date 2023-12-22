@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductsService } from '../proxy/products';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-product',
@@ -75,10 +76,20 @@ import { InputTextModule } from 'primeng/inputtext';
         [rowsPerPageOptions]="[10, 20, 30, 50, 100]"
       ></p-paginator>
       <!--Block UI-->
-      <p-blockUI [blocked]="blockedPanel" [target]="pnl"></p-blockUI>
+      <p-blockUI [blocked]="blockedPanel" [target]="pnl">
+        <p-progressSpinner></p-progressSpinner>
+      </p-blockUI>
     </p-panel>
   `,
-  imports: [PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, InputTextModule],
+  imports: [
+    PanelModule,
+    TableModule,
+    PaginatorModule,
+    BlockUIModule,
+    ButtonModule,
+    InputTextModule,
+    ProgressSpinnerModule,
+  ],
   standalone: true,
 })
 export class ProductComponent implements OnInit {
@@ -86,6 +97,7 @@ export class ProductComponent implements OnInit {
     this.loadProductCategories();
     this.loadData();
   }
+
   blockedPanel: boolean = false;
   items: ProductInListDto[] | undefined = [];
 
@@ -116,7 +128,7 @@ export class ProductComponent implements OnInit {
           this.items = response.items;
           this.totalCount = response.totalCount;
         },
-        error: () => {},
+        error: () => this.toggleBlockUI(false),
       });
   }
 
@@ -135,5 +147,15 @@ export class ProductComponent implements OnInit {
     this.skipCount = (event.page - 1) * this.maxResultCount;
     this.maxResultCount = event.rows;
     this.loadData();
+  }
+
+  private toggleBlockUI(enabled: boolean) {
+    if (enabled) {
+      this.blockedPanel = true;
+    } else {
+      setTimeout(() => {
+        this.blockedPanel = false;
+      }, 1000);
+    }
   }
 }
