@@ -4,8 +4,8 @@ import { LayoutService } from './service/app.layout.service';
 import { NgClass } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { LOGIN_URL } from '../../shared/constants/urls.const';
-import { AuthService } from '../../shared/services/auth.service';
+import { LOGIN_URL } from '../shared/constants/urls.const';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-topbar',

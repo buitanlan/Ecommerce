@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { PasswordModule } from 'primeng/password';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,11 +7,11 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { Router, RouterLink } from '@angular/router';
 import { ChipsModule } from 'primeng/chips';
-import { DestroyService } from '../../../shared/services/destroy.service';
-import { LoginRequestDto } from '../../../shared/models/login-request.dto';
-import { takeUntil } from 'rxjs';
-import { AuthService } from '../../../shared/services/auth.service';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../../shared/constants/keys.constant';
+import { LoginRequestDto } from '../../shared/models/login-request.dto';
+import { AuthService } from '../../shared/services/auth.service';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../shared/constants/keys.constant';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TokenStorageService } from '../../shared/services/token.service';
 
 @Component({
   selector: 'app-login',
@@ -75,7 +75,17 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../../shared/constants/keys.cons
   `,
   styles: [
     `
-      :host ::ng-deep .pi-eye,
+      :host ::ng-deep .p-password input {
+        width: 100%;
+        padding: 1rem;
+      }
+
+      :host ::ng-deep .pi-eye {
+        transform: scale(1.6);
+        margin-right: 1rem;
+        color: var(--primary-color) !important;
+      }
+
       :host ::ng-deep .pi-eye-slash {
         transform: scale(1.6);
         margin-right: 1rem;
@@ -94,7 +104,6 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../../shared/constants/keys.cons
     ReactiveFormsModule,
   ],
   standalone: true,
-  providers: [DestroyService],
 })
 export class LoginComponent {
   valCheck: string[] = ['remember'];
@@ -102,9 +111,10 @@ export class LoginComponent {
   password!: string;
   readonly layoutService = inject(LayoutService);
   readonly fb = inject(FormBuilder);
-  readonly destroy = inject(DestroyService);
   readonly router = inject(Router);
-  private readonly authService = inject(AuthService);
+  readonly authService = inject(AuthService);
+  readonly #destroyRef = inject(DestroyRef);
+  readonly #tokenService = inject(TokenStorageService);
   loginForm = this.fb.group({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
@@ -118,10 +128,10 @@ export class LoginComponent {
 
     this.authService
       .login(request)
-      .pipe(takeUntil(this.destroy.destroy$))
+      .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((res: any) => {
-        localStorage.setItem(ACCESS_TOKEN, res.access_token);
-        localStorage.setItem(REFRESH_TOKEN, res.refresh_token);
+        this.#tokenService.saveToken(res.access_token);
+        this.#tokenService.saveRefreshToken(res.refresh_token);
         void this.router.navigate(['']);
       });
   }

@@ -1,13 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { BlockUIModule } from 'primeng/blockui';
-import { ProductInListDto } from '../proxy/product-categories';
-import { DestroyService } from '../../shared/services/destroy.service';
+import { ProductCategoriesService, ProductCategoryInListDto, ProductInListDto } from '../proxy/product-categories';
 import { PagedResultDto } from '@abp/ng.core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductsService } from '../proxy/products';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-product',
@@ -15,8 +16,25 @@ import { ProductsService } from '../proxy/products';
     <p-panel header="Danh sách sản phẩm">
       <!--Filter (search panel)-->
       <div class="grid">
-        <div class="col-4">4</div>
-        <div class="col-8">8</div>
+        <div class="col-4">
+          <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Thêm mới"></button>
+        </div>
+        <div class="col-8">
+          <div class="formgroup-inline">
+            <div class="field">
+              <label for="txt-keyword" class="p-sr-only">Từ khóa</label>
+              <input id="txt-keyword" pInputText type="text" placeholder="Gõ từ khóa" />
+            </div>
+            <div class="field">
+              <p-dropdown
+                [options]="productCategories"
+                [(ngModel)]="categoryId"
+                placeholder="Chọn danh mục"
+              ></p-dropdown>
+            </div>
+            <button type="button" pButton (click)="loadData()" icon="fa fa-search" iconPos="left" label="Tìm"></button>
+          </div>
+        </div>
       </div>
 
       <!--Table-->
@@ -60,11 +78,14 @@ import { ProductsService } from '../proxy/products';
       <p-blockUI [blocked]="blockedPanel" [target]="pnl"></p-blockUI>
     </p-panel>
   `,
-  imports: [PanelModule, TableModule, PaginatorModule, BlockUIModule],
+  imports: [PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, InputTextModule],
   standalone: true,
-  providers: [DestroyService],
 })
-export class ProductComponent {
+export class ProductComponent implements OnInit {
+  ngOnInit(): void {
+    this.loadProductCategories();
+    this.loadData();
+  }
   blockedPanel: boolean = false;
   items: ProductInListDto[] | undefined = [];
 
@@ -72,16 +93,24 @@ export class ProductComponent {
   public skipCount: number = 0;
   public maxResultCount: number = 10;
   public totalCount: number | undefined = 0;
+  //Filter
+  productCategories: any[] = [];
+  keyword: string = '';
+  categoryId: string = '';
 
   readonly #productsService = inject(ProductsService);
+  readonly #productCategoriesService = inject(ProductCategoriesService);
+  readonly #destroyRef = inject(DestroyRef);
+
   loadData() {
     this.#productsService
       .getListFilter({
-        keyword: '',
+        keyword: this.keyword,
+        categoryId: this.categoryId,
         maxResultCount: this.maxResultCount,
         skipCount: this.skipCount,
       })
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (response: PagedResultDto<ProductInListDto>) => {
           this.items = response.items;
@@ -89,6 +118,17 @@ export class ProductComponent {
         },
         error: () => {},
       });
+  }
+
+  loadProductCategories() {
+    this.#productCategoriesService.getListAll().subscribe((response: ProductCategoryInListDto[]) => {
+      response.forEach((element) => {
+        this.productCategories.push({
+          value: element.id,
+          name: element.name,
+        });
+      });
+    });
   }
 
   pageChanged(event: any): void {

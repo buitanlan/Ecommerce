@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api';
-import { AuthService } from '../shared/services/auth.service';
-import { LOGIN_URL } from '../shared/constants/urls.const';
+import { AuthService } from './shared/services/auth.service';
+import { LOGIN_URL } from './shared/constants/urls.const';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import { LOGIN_URL } from '../shared/constants/urls.const';
   imports: [RouterOutlet],
   standalone: true,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   menuMode = 'static';
   readonly #primengConfig = inject(PrimeNGConfig);
   readonly #authService = inject(AuthService);

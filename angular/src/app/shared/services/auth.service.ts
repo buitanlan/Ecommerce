@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginRequestDto } from '../models/login-request.dto';
 import { LoginResponseDto } from '../models/login-response.dto';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/keys.constant';
 
 @Injectable({

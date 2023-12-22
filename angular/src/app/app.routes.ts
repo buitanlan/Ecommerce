@@ -11,6 +11,7 @@ export const routes: Routes = [
   {
     path: 'product',
     loadChildren: () => import('./product/product.routes').then((m) => m.routes),
+    loadComponent: () => AppLayoutComponent,
   },
   {
     path: 'auth',
