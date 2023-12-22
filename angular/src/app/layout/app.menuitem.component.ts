@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { MenuService } from './app.menu.service';
 import { LayoutService } from './service/app.layout.service';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { RippleModule } from 'primeng/ripple';
 
 @Component({
@@ -67,9 +67,9 @@ import { RippleModule } from 'primeng/ripple';
 
       @if (item.items && item.visible !== false) {
         <ul [@children]="submenuAnimation">
-          <ng-template ngFor let-child let-i="index" [ngForOf]="item.items">
+          @for (child of item.items; track child; let i = $index) {
             <li app-menuitem [item]="child" [index]="i" [parentKey]="key"></li>
-          </ng-template>
+          }
         </ul>
       }
     </ng-container>
@@ -91,7 +91,7 @@ import { RippleModule } from 'primeng/ripple';
       transition('collapsed <=> expanded', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)')),
     ]),
   ],
-  imports: [RouterLink, RouterLinkActive, NgClass, NgIf, NgForOf, RippleModule],
+  imports: [RouterLink, RouterLinkActive, NgClass, RippleModule],
   standalone: true,
 })
 export class AppMenuitemComponent implements OnInit, OnDestroy {

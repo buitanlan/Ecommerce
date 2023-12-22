@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AppMenuitemComponent } from './app.menuitem.component';
-import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-menu',
@@ -16,7 +15,7 @@ import { NgForOf, NgIf } from '@angular/common';
       }
     </ul>
   `,
-  imports: [AppMenuitemComponent, NgIf, NgForOf],
+  imports: [AppMenuitemComponent],
   standalone: true,
 })
 export class AppMenuComponent {

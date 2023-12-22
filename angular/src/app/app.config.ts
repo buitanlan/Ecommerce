@@ -7,6 +7,9 @@ import { registerLocale } from '@abp/ng.core/locale';
 import { environment } from '../environments/environment';
 import { CoreModule } from '@abp/ng.core';
 import { tokenInterceptor } from './shared/interceptors/token.interceptor';
+import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { NotificationService } from './shared/services/notification.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,5 +22,8 @@ export const appConfig: ApplicationConfig = {
       }),
     ),
     provideHttpClient(withInterceptors([tokenInterceptor])),
+    DialogService,
+    MessageService,
+    NotificationService,
   ],
 };

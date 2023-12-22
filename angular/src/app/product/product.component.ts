@@ -6,10 +6,13 @@ import { BlockUIModule } from 'primeng/blockui';
 import { ProductCategoriesService, ProductCategoryInListDto, ProductInListDto } from '../proxy/product-categories';
 import { PagedResultDto } from '@abp/ng.core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ProductsService } from '../proxy/products';
+import { ProductDto, ProductsService } from '../proxy/products';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogService } from 'primeng/dynamicdialog';
+import { NotificationService } from '../shared/services/notification.service';
+import { ProductDetailComponent } from './product-detail.component';
 
 @Component({
   selector: 'app-product',
@@ -18,7 +21,14 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
       <!--Filter (search panel)-->
       <div class="grid">
         <div class="col-4">
-          <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Thêm mới"></button>
+          <button
+            pButton
+            type="button"
+            (click)="showAddModal()"
+            icon="fa fa-plus"
+            iconPos="left"
+            label="Thêm mới"
+          ></button>
         </div>
         <div class="col-8">
           <div class="formgroup-inline">
@@ -112,6 +122,8 @@ export class ProductComponent implements OnInit {
 
   readonly #productsService = inject(ProductsService);
   readonly #productCategoriesService = inject(ProductCategoriesService);
+  readonly #dialogService = inject(DialogService);
+  readonly #notificationService = inject(NotificationService);
   readonly #destroyRef = inject(DestroyRef);
 
   loadData() {
@@ -148,7 +160,19 @@ export class ProductComponent implements OnInit {
     this.maxResultCount = event.rows;
     this.loadData();
   }
+  showAddModal() {
+    const ref = this.#dialogService.open(ProductDetailComponent, {
+      header: 'Thêm mới sản phẩm',
+      width: '70%',
+    });
 
+    ref.onClose.subscribe((data: ProductDto) => {
+      if (data) {
+        this.loadData();
+        this.#notificationService.showSuccess('Thêm sản phẩm thành công');
+      }
+    });
+  }
   private toggleBlockUI(enabled: boolean) {
     if (enabled) {
       this.blockedPanel = true;
