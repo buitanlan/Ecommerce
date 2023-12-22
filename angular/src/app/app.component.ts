@@ -20,7 +20,7 @@ export class AppComponent {
     this.#primengConfig.ripple = true;
     document.documentElement.style.fontSize = '14px';
     if (!this.#authService.isAuthenticated()) {
-      this.#router.navigate([LOGIN_URL]);
+      void this.#router.navigate([LOGIN_URL]);
     }
   }
 }
