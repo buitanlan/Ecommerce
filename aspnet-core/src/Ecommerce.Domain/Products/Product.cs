@@ -5,15 +5,17 @@ namespace Ecommerce.Products;
 
 public class Product : AuditedAggregateRoot<Guid>
 {
-    public Product() {}
+    public Product()
+    {
+    }
 
-    public Product(Guid id, Guid manufacturerId, 
-        string name, string code, string slug, 
-        ProductType productType, string sKU, 
-        int sortOrder, bool visibility, 
-        bool isActive, Guid categoryId, 
+    public Product(Guid id, Guid manufacturerId,
+        string name, string code, string slug,
+        ProductType productType, string sKU,
+        int sortOrder, bool visibility,
+        bool isActive, Guid categoryId,
         string seoMetaDescription, string description,
-        string thumbnailPicture, double sellPrice, 
+        string thumbnailPicture, double sellPrice,
         string categoryName, string categorySlug)
     {
         Id = id;
@@ -34,9 +36,10 @@ public class Product : AuditedAggregateRoot<Guid>
         CategoryName = categoryName;
         CategorySlug = categorySlug;
     }
+
     public Guid ManufacturerId { get; set; }
     public string Name { get; set; }
-    public string  Code { get; set; }
+    public string Code { get; set; }
     public string Slug { get; set; }
     public ProductType ProductType { get; set; }
     public string SKU { get; set; }

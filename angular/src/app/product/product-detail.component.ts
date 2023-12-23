@@ -4,7 +4,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductDto, ProductsService } from '../proxy/products';
 import { ProductCategoriesService, ProductCategoryInListDto } from '../proxy/product-categories';
-import { takeUntil } from 'rxjs';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -14,6 +13,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ValidationMessageComponent } from '../shared/validation-message/validatetion-message.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -23,23 +23,43 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
         <!--form grid-->
         <div class="formgrid grid">
           <div class="field col-12">
-            <label for="name" class="block">Tên</label>
+            <label for="name" class="block">Tên<span class="required">*</span></label>
             <input id="name" pInputText type="text" class="w-full" formControlName="name" />
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="code" class="block">Code</label>
+            <label for="code" class="block">Code<span class="required">*</span></label>
             <input id="code" pInputText type="text" formControlName="code" />
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="slug" class="block">Slug</label>
+            <label for="slug" class="block">Slug<span class="required">*</span></label>
             <input id="slug" pInputText type="text" class="w-full" formControlName="slug" />
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="sku" class="block">SKU</label>
+            <label for="sku" class="block">SKU<span class="required">*</span></label>
             <input id="sku" pInputText type="text" class="w-full" formControlName="sku" />
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="manufacturerId" class="block">Nhà sản xuất</label>
+            <label for="manufacturerId" class="block">Nhà sản xuất<span class="required">*</span></label>
             <p-dropdown
               [options]="manufacturers"
               formControlName="manufacturerId"
@@ -48,9 +68,14 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
               autoWidth="false"
               [style]="{ width: '100%' }"
             ></p-dropdown>
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="categoryId" class="block">Danh mục</label>
+            <label for="categoryId" class="block">Danh mục<span class="required">*</span></label>
             <p-dropdown
               [options]="productCategories"
               formControlName="categoryId"
@@ -59,9 +84,14 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
               autoWidth="false"
               [style]="{ width: '100%' }"
             ></p-dropdown>
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="productType" class="block">Loại sản phẩm</label>
+            <label for="productType" class="block">Loại sản phẩm<span class="required">*</span></label>
             <p-dropdown
               [options]="productTypes"
               formControlName="productType"
@@ -70,14 +100,29 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
               autoWidth="false"
               [style]="{ width: '100%' }"
             ></p-dropdown>
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="slug" class="block">Thứ tự</label>
+            <label for="slug" class="block">Thứ tự<span class="required">*</span></label>
             <p-inputNumber formControlName="sortOrder"></p-inputNumber>
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field col-12">
-            <label for="sellPrice" class="block">Giá bán</label>
+            <label for="sellPrice" class="block">Giá bán<span class="required">*</span></label>
             <p-inputNumber formControlName="sellPrice"></p-inputNumber>
+            <app-validation-message
+              [entityForm]="form"
+              fieldName="name"
+              [validationMessages]="validationMessages"
+            ></app-validation-message>
           </div>
           <div class="field-checkbox col-12 md:col-3">
             <p-checkbox formControlName="visibility" [binary]="true" id="visibility"></p-checkbox>
@@ -103,7 +148,15 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
           </div>
         </div>
         <ng-template pTemplate="footer">
-          <button type="submit" pButton icon="fa fa-save" iconPos="left" label="Lưu lại"></button>
+          <button
+            type="submit"
+            [disabled]="!form.valid || btnDisabled"
+            pButton
+            icon="fa fa-save"
+            iconPos="left"
+            label="Lưu lại"
+            class="cursor-pointer"
+          ></button>
         </ng-template>
         <!--Block UI-->
         <p-blockUI [blocked]="blockedPanel" [target]="pnl">
@@ -125,6 +178,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     DropdownModule,
     EditorModule,
     InputTextareaModule,
+    ValidationMessageComponent,
   ],
 })
 export class ProductDetailComponent implements OnInit {
@@ -136,6 +190,21 @@ export class ProductDetailComponent implements OnInit {
   manufacturers: any[] = [];
   productTypes: any[] = [];
   selectedEntity = {} as ProductDto;
+  btnDisabled = false;
+  validationMessages = {
+    code: [{ type: 'required', message: 'Bạn phải nhập mã duy nhất' }],
+    name: [
+      { type: 'required', message: 'Bạn phải nhập tên' },
+      { type: 'maxlength', message: 'Bạn không được nhập quá 255 kí tự' },
+    ],
+    slug: [{ type: 'required', message: 'Bạn phải URL duy nhất' }],
+    sku: [{ type: 'required', message: 'Bạn phải mã SKU sản phẩm' }],
+    manufacturerId: [{ type: 'required', message: 'Bạn phải chọn nhà cung cấp' }],
+    categoryId: [{ type: 'required', message: 'Bạn phải chọn danh mục' }],
+    productType: [{ type: 'required', message: 'Bạn phải chọn loại sản phẩm' }],
+    sortOrder: [{ type: 'required', message: 'Bạn phải nhập thứ tự' }],
+    sellPrice: [{ type: 'required', message: 'Bạn phải nhập giá bán' }],
+  };
 
   readonly #destroyRef = inject(DestroyRef);
   readonly #productService = inject(ProductsService);
@@ -176,7 +245,10 @@ export class ProductDetailComponent implements OnInit {
 
   private buildForm() {
     this.form = this.#fb.group({
-      name: new FormControl(this.selectedEntity.name || null, Validators.required),
+      name: new FormControl(
+        this.selectedEntity.name || null,
+        Validators.compose([Validators.required, Validators.maxLength(250)]),
+      ),
       code: new FormControl(this.selectedEntity.code || null, Validators.required),
       slug: new FormControl(this.selectedEntity.slug || null, Validators.required),
       sku: new FormControl(this.selectedEntity.sku || null, Validators.required),
@@ -185,19 +257,21 @@ export class ProductDetailComponent implements OnInit {
       productType: new FormControl(this.selectedEntity.productType || null, Validators.required),
       sortOrder: new FormControl(this.selectedEntity.sortOrder || null, Validators.required),
       sellPrice: new FormControl(this.selectedEntity.sellPrice || null, Validators.required),
-      visibility: new FormControl(this.selectedEntity.visibility || false),
-      isActive: new FormControl(this.selectedEntity.isActive || false),
+      visibility: new FormControl(this.selectedEntity.visibility || true),
+      isActive: new FormControl(this.selectedEntity.isActive || true),
       seoMetaDescription: new FormControl(this.selectedEntity.seoMetaDescription || null),
       description: new FormControl(this.selectedEntity.description || null),
     });
   }
 
   private toggleBlockUI(enabled: boolean) {
-    if (enabled == true) {
+    if (enabled) {
       this.blockedPanel = true;
+      this.btnDisabled = true;
     } else {
       setTimeout(() => {
         this.blockedPanel = false;
+        this.btnDisabled = false;
       }, 1000);
     }
   }
