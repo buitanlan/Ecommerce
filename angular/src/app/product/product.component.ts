@@ -14,6 +14,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { NotificationService } from '../shared/services/notification.service';
 import { ProductDetailComponent } from './product-detail.component';
 import { BadgeModule } from 'primeng/badge';
+import { ProductType } from '../proxy/ecommerce/products';
 
 @Component({
   selector: 'app-product',
@@ -54,9 +55,9 @@ import { BadgeModule } from 'primeng/badge';
       </div>
 
       <!--Table-->
-      <p-table #pnl [value]="items!" [(selection)]="selectedItems">
+      <p-table #pnl [value]="items!" [(selection)]="selectedItems" selectionMode="multiple">
         <ng-template pTemplate="header">
-          <tr>
+          <tr [pSelectableRow]="'row'">
             <th style="width: 10px">
               <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
@@ -79,8 +80,8 @@ import { BadgeModule } from 'primeng/badge';
             <td>{{ row.code }}</td>
             <td>{{ row.sku }}</td>
             <td>{{ row.name }}</td>
-            <td>{{ row.productType }}</td>
-            <td>{{ row.categoryId }}</td>
+            <td>{{ getProductTypeName(row.productType) }}</td>
+            <td>{{ row.creategoryName }}</td>
             <td>{{ row.sortOrder }}</td>
             <td>
               @if (row.visibility == 1) {
@@ -233,5 +234,9 @@ export class ProductComponent implements OnInit {
         this.blockedPanel = false;
       }, 1000);
     }
+  }
+
+  getProductTypeName(value: number) {
+    return ProductType[value];
   }
 }
