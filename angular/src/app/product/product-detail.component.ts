@@ -19,6 +19,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin } from 'rxjs';
 import { ManufacturerInListDto, ManufacturersService } from '../proxy/manufacturers';
 import { productTypeOptions } from '../proxy/ecommerce/products';
+import { NotificationService } from '../shared/services/notification.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -226,6 +227,7 @@ export class ProductDetailComponent implements OnInit {
   readonly #utilService = inject(UtilityService);
   readonly #config = inject(DynamicDialogConfig);
   readonly #ref = inject(DynamicDialogRef);
+  readonly #notificationService = inject(NotificationService);
 
   ngOnInit(): void {
     this.buildForm();
@@ -297,7 +299,7 @@ export class ProductDetailComponent implements OnInit {
   saveChange() {
     this.toggleBlockUI(true);
 
-    if (this.#utilService.isEmpty(this.#config.data?.id) == true) {
+    if (this.#utilService.isEmpty(this.#config.data?.id)) {
       this.#productService
         .create(this.form.value)
         .pipe(takeUntilDestroyed(this.#destroyRef))
@@ -307,7 +309,8 @@ export class ProductDetailComponent implements OnInit {
 
             this.#ref.close(this.form.value);
           },
-          error: () => {
+          error: (err) => {
+            this.#notificationService.showError(err.error.error.message);
             this.toggleBlockUI(false);
           },
         });
@@ -320,7 +323,8 @@ export class ProductDetailComponent implements OnInit {
             this.toggleBlockUI(false);
             this.#ref.close(this.form.value);
           },
-          error: () => {
+          error: (err) => {
+            this.#notificationService.showError(err.error.error.message);
             this.toggleBlockUI(false);
           },
         });

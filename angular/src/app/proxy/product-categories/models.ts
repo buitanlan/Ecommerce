@@ -47,4 +47,6 @@ export interface ProductInListDto extends EntityDto<string> {
   isActive: boolean;
   categoryId?: string;
   thumbnailPicture?: string;
+  categoryName?: string;
+  categorySlug?: string;
 }

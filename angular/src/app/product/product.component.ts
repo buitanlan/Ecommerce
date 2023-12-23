@@ -81,7 +81,7 @@ import { ProductType } from '../proxy/ecommerce/products';
             <td>{{ row.sku }}</td>
             <td>{{ row.name }}</td>
             <td>{{ getProductTypeName(row.productType) }}</td>
-            <td>{{ row.creategoryName }}</td>
+            <td>{{ row.categoryName }}</td>
             <td>{{ row.sortOrder }}</td>
             <td>
               @if (row.visibility == 1) {
