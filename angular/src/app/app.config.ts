@@ -10,6 +10,7 @@ import { tokenInterceptor } from './shared/interceptors/token.interceptor';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from './shared/services/notification.service';
+import { UtilityService } from './shared/services/utility.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,5 +26,6 @@ export const appConfig: ApplicationConfig = {
     DialogService,
     MessageService,
     NotificationService,
+    UtilityService,
   ],
 };

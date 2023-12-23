@@ -14,6 +14,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EditorModule } from 'primeng/editor';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ValidationMessageComponent } from '../shared/validation-message/validatetion-message.component';
+import { UtilityService } from '../shared/services/utility.service';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { forkJoin } from 'rxjs';
+import { ManufacturerInListDto, ManufacturersService } from '../proxy/manufacturers';
+import { productTypeOptions } from '../proxy/ecommerce/products';
 
 @Component({
   selector: 'app-product-detail',
@@ -24,7 +29,14 @@ import { ValidationMessageComponent } from '../shared/validation-message/validat
         <div class="formgrid grid">
           <div class="field col-12">
             <label for="name" class="block">Tên<span class="required">*</span></label>
-            <input id="name" pInputText type="text" class="w-full" formControlName="name" />
+            <input
+              id="name"
+              pInputText
+              (keyup)="generateSlug()"
+              type="text"
+              class="w-full"
+              formControlName="name"
+            />type="text" class="w-full" formControlName="name" />
             <app-validation-message
               [entityForm]="form"
               fieldName="name"
@@ -209,10 +221,57 @@ export class ProductDetailComponent implements OnInit {
   readonly #destroyRef = inject(DestroyRef);
   readonly #productService = inject(ProductsService);
   readonly #productCategoryService = inject(ProductCategoriesService);
+  readonly #manufacturersService = inject(ManufacturersService);
   readonly #fb = inject(FormBuilder);
+  readonly #utilService = inject(UtilityService);
+  readonly #config = inject(DynamicDialogConfig);
+  readonly #ref = inject(DynamicDialogRef);
 
   ngOnInit(): void {
     this.buildForm();
+    this.loadProductTypes();
+    //Load data to form
+    const productCategories = this.#productCategoryService.getListAll();
+    const manufacturers = this.#manufacturersService.getListAll();
+    this.toggleBlockUI(true);
+    forkJoin({
+      productCategories,
+      manufacturers,
+    })
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (response: any) => {
+          //Push data to dropdown
+          const productCategories = response.productCategories as ProductCategoryInListDto[];
+          const manufacturers = response.manufacturers as ManufacturerInListDto[];
+          productCategories.forEach((element) => {
+            this.productCategories.push({
+              value: element.id,
+              label: element.name,
+            });
+          });
+
+          manufacturers.forEach((element) => {
+            this.manufacturers.push({
+              value: element.id,
+              label: element.name,
+            });
+          });
+          //Load edit data to form
+          if (this.#utilService.isEmpty(this.#config.data?.id)) {
+            this.toggleBlockUI(false);
+          } else {
+            this.loadFormDetails(this.#config.data?.id);
+          }
+        },
+        error: () => {
+          this.toggleBlockUI(false);
+        },
+      });
+  }
+
+  generateSlug() {
+    this.form.controls['slug'].setValue(this.#utilService.MakeSeoTitle(this.form.get('name')?.value));
   }
 
   loadFormDetails(id: string) {
@@ -232,13 +291,11 @@ export class ProductDetailComponent implements OnInit {
       });
   }
   saveChange() {}
-  loadProductCategories() {
-    this.#productCategoryService.getListAll().subscribe((response: ProductCategoryInListDto[]) => {
-      response.forEach((element) => {
-        this.productCategories.push({
-          value: element.id,
-          name: element.name,
-        });
+  loadProductTypes() {
+    productTypeOptions.forEach((element) => {
+      this.productTypes.push({
+        value: element.value,
+        label: element.key,
       });
     });
   }
