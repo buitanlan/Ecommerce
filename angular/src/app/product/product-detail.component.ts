@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,6 +20,8 @@ import { forkJoin } from 'rxjs';
 import { ManufacturerInListDto, ManufacturersService } from '../proxy/manufacturers';
 import { productTypeOptions } from '../proxy/ecommerce/products';
 import { NotificationService } from '../shared/services/notification.service';
+import { ImageModule } from 'primeng/image';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-detail',
@@ -30,14 +32,7 @@ import { NotificationService } from '../shared/services/notification.service';
         <div class="formgrid grid">
           <div class="field col-12">
             <label for="name" class="block">Tên<span class="required">*</span></label>
-            <input
-              id="name"
-              pInputText
-              (keyup)="generateSlug()"
-              type="text"
-              class="w-full"
-              formControlName="name"
-            />type="text" class="w-full" formControlName="name" />
+            <input id="name" pInputText (keyup)="generateSlug()" type="text" class="w-full" formControlName="name" />
             <app-validation-message
               [entityForm]="form"
               fieldName="name"
@@ -137,6 +132,15 @@ import { NotificationService } from '../shared/services/notification.service';
               [validationMessages]="validationMessages"
             ></app-validation-message>
           </div>
+
+          <div class="field col-12 md:col-6">
+            <label for="thumbnailImage" class="block">Hình ảnh</label>
+            <input id="thumbnailImage" type="file" (change)="onFileChange($event)" class="w-full" />
+          </div>
+          <div class="field col-12 md:col-6">
+            <p-image [src]="thumbnailImage" [alt]="selectedEntity.name" width="250" [preview]="true"></p-image>
+          </div>
+
           <div class="field-checkbox col-12 md:col-3">
             <p-checkbox formControlName="visibility" [binary]="true" id="visibility"></p-checkbox>
             <label for="visibility">Hiển thị</label>
@@ -192,11 +196,13 @@ import { NotificationService } from '../shared/services/notification.service';
     EditorModule,
     InputTextareaModule,
     ValidationMessageComponent,
+    ImageModule,
   ],
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
   blockedPanel: boolean = false;
   public form!: FormGroup;
+  public thumbnailImage!: SafeResourceUrl;
 
   //Dropdown
   productCategories: any[] = [];
@@ -228,11 +234,16 @@ export class ProductDetailComponent implements OnInit {
   readonly #config = inject(DynamicDialogConfig);
   readonly #ref = inject(DynamicDialogRef);
   readonly #notificationService = inject(NotificationService);
-
+  readonly #cdr = inject(ChangeDetectorRef);
+  readonly #sanitizer = inject(DomSanitizer);
   ngOnInit(): void {
     this.buildForm();
     this.loadProductTypes();
     this.initFormData();
+  }
+
+  ngOnDestroy(): void {
+    this.#ref?.close();
   }
 
   initFormData() {
@@ -357,6 +368,8 @@ export class ProductDetailComponent implements OnInit {
       isActive: new FormControl(this.selectedEntity.isActive || true),
       seoMetaDescription: new FormControl(this.selectedEntity.seoMetaDescription || null),
       description: new FormControl(this.selectedEntity.description || null),
+      thumbnailPictureName: new FormControl(this.selectedEntity.description || null),
+      thumbnailPictureContent: new FormControl(null),
     });
   }
 
@@ -369,6 +382,38 @@ export class ProductDetailComponent implements OnInit {
         this.blockedPanel = false;
         this.btnDisabled = false;
       }, 1000);
+    }
+  }
+
+  loadThumbnail(fileName: string) {
+    this.#productService
+      .getThumbnailImage(fileName)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (response: string) => {
+          const fileExt = this.selectedEntity.thumbnailPicture?.split('.').pop();
+          this.thumbnailImage = this.#sanitizer.bypassSecurityTrustResourceUrl(
+            `data:image/${fileExt};base64, ${response}`,
+          );
+        },
+      });
+  }
+
+  onFileChange(event: any) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.form.patchValue({
+          thumbnailPictureName: file.name,
+          thumbnailPictureContent: reader.result,
+        });
+
+        // need to run CD since file load runs outside of zone
+        this.#cdr.markForCheck();
+      };
     }
   }
 }
