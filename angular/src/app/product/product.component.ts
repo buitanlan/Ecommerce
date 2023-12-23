@@ -13,6 +13,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogService } from 'primeng/dynamicdialog';
 import { NotificationService } from '../shared/services/notification.service';
 import { ProductDetailComponent } from './product-detail.component';
+import { BadgeModule } from 'primeng/badge';
 
 @Component({
   selector: 'app-product',
@@ -21,14 +22,18 @@ import { ProductDetailComponent } from './product-detail.component';
       <!--Filter (search panel)-->
       <div class="grid">
         <div class="col-4">
-          <button
-            pButton
-            type="button"
-            (click)="showAddModal()"
-            icon="fa fa-plus"
-            iconPos="left"
-            label="Thêm mới"
-          ></button>
+          <button pButton type="button" (click)="showAddModal()" icon="fa fa-plus" iconPos="left" label="Thêm"></button>
+          @if (selectedItems.length == 1) {
+            <button
+              pButton
+              type="button"
+              (click)="showEditModal()"
+              class="ml-1 p-button-help"
+              icon="fa fa-minus"
+              iconPos="left"
+              label="Sửa"
+            ></button>
+          }
         </div>
         <div class="col-8">
           <div class="formgroup-inline">
@@ -49,9 +54,12 @@ import { ProductDetailComponent } from './product-detail.component';
       </div>
 
       <!--Table-->
-      <p-table #pnl [value]="items!">
+      <p-table #pnl [value]="items!" [(selection)]="selectedItems">
         <ng-template pTemplate="header">
           <tr>
+            <th style="width: 10px">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
             <th>Mã</th>
             <th>SKU</th>
             <th>Tên</th>
@@ -64,14 +72,32 @@ import { ProductDetailComponent } from './product-detail.component';
         </ng-template>
         <ng-template pTemplate="body" let-row>
           <tr>
+            <td style="width: 10px">
+              <span class="ui-column-title"></span>
+              <p-tableCheckbox [value]="row"></p-tableCheckbox>
+            </td>
             <td>{{ row.code }}</td>
             <td>{{ row.sku }}</td>
             <td>{{ row.name }}</td>
             <td>{{ row.productType }}</td>
             <td>{{ row.categoryId }}</td>
             <td>{{ row.sortOrder }}</td>
-            <td>{{ row.visibility }}</td>
-            <td>{{ row.isActive }}</td>
+            <td>
+              @if (row.visibility == 1) {
+                <p-badge severity="success" value="Hiển thị"></p-badge>
+              }
+              @if (row.visibility == 0) {
+                <p-badge severity="danger" value="Ẩn"></p-badge>
+              }
+            </td>
+            <td>
+              @if (row.isActive == 1) {
+                <p-badge value="Kích hoạt" severity="success"></p-badge>
+              }
+              @if (row.isActive == 0) {
+                <p-badge value="Khoá" severity="danger"></p-badge>
+              }
+            </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="summary">
@@ -99,6 +125,7 @@ import { ProductDetailComponent } from './product-detail.component';
     ButtonModule,
     InputTextModule,
     ProgressSpinnerModule,
+    BadgeModule,
   ],
   standalone: true,
 })
@@ -119,6 +146,7 @@ export class ProductComponent implements OnInit {
   productCategories: any[] = [];
   keyword: string = '';
   categoryId: string = '';
+  public selectedItems: ProductInListDto[] = [];
 
   readonly #productsService = inject(ProductsService);
   readonly #productCategoriesService = inject(ProductCategoriesService);
@@ -169,6 +197,30 @@ export class ProductComponent implements OnInit {
     ref.onClose.subscribe((data: ProductDto) => {
       if (data) {
         this.loadData();
+        this.#notificationService.showSuccess('Thêm sản phẩm thành công');
+        this.selectedItems = [];
+      }
+    });
+  }
+
+  showEditModal() {
+    if (this.selectedItems.length == 0) {
+      this.#notificationService.showError('Bạn phải chọn một bản ghi');
+      return;
+    }
+    const id = this.selectedItems[0].id;
+    const ref = this.#dialogService.open(ProductDetailComponent, {
+      data: {
+        id: id,
+      },
+      header: 'Cập nhật sản phẩm',
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((data: ProductDto) => {
+      if (data) {
+        this.loadData();
+        this.selectedItems = [];
         this.#notificationService.showSuccess('Thêm sản phẩm thành công');
       }
     });

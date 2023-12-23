@@ -230,6 +230,10 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
     this.buildForm();
     this.loadProductTypes();
+    this.initFormData();
+  }
+
+  initFormData() {
     //Load data to form
     const productCategories = this.#productCategoryService.getListAll();
     const manufacturers = this.#manufacturersService.getListAll();
@@ -290,7 +294,38 @@ export class ProductDetailComponent implements OnInit {
         },
       });
   }
-  saveChange() {}
+  saveChange() {
+    this.toggleBlockUI(true);
+
+    if (this.#utilService.isEmpty(this.#config.data?.id) == true) {
+      this.#productService
+        .create(this.form.value)
+        .pipe(takeUntilDestroyed(this.#destroyRef))
+        .subscribe({
+          next: () => {
+            this.toggleBlockUI(false);
+
+            this.#ref.close(this.form.value);
+          },
+          error: () => {
+            this.toggleBlockUI(false);
+          },
+        });
+    } else {
+      this.#productService
+        .update(this.#config.data?.id, this.form.value)
+        .pipe(takeUntilDestroyed(this.#destroyRef))
+        .subscribe({
+          next: () => {
+            this.toggleBlockUI(false);
+            this.#ref.close(this.form.value);
+          },
+          error: () => {
+            this.toggleBlockUI(false);
+          },
+        });
+    }
+  }
   loadProductTypes() {
     productTypeOptions.forEach((element) => {
       this.productTypes.push({
