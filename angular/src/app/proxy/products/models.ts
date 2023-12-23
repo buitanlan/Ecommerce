@@ -71,6 +71,7 @@ export interface ProductDto {
   id?: string;
   categoryName?: string;
   categorySlug?: string;
+  manufacturerId: string;
 }
 
 export interface ProductListFilterDto extends BaseListFilterDto {
