@@ -26,7 +26,10 @@ export class AppMenuComponent {
     },
     {
       label: 'Sản phẩm',
-      items: [{ label: 'Danh sách sản phẩm', icon: 'pi pi-fw pi-circle', routerLink: ['/product'] }],
+      items: [
+        { label: 'Danh sách sản phẩm', icon: 'pi pi-fw pi-circle', routerLink: ['/product'] },
+        { label: 'Danh sách thuộc tính', icon: 'pi pi-fw pi-circle', routerLink: ['/attribute'] },
+      ],
     },
   ];
 }

@@ -14,6 +14,11 @@ export const routes: Routes = [
     loadComponent: () => AppLayoutComponent,
   },
   {
+    path: 'attribute',
+    loadChildren: () => import('./attribute/attribute.routes').then((m) => m.routes),
+    component: AppLayoutComponent,
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./auth/auth.routes').then((m) => m.routes),
   },
