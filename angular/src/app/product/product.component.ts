@@ -15,6 +15,7 @@ import { NotificationService } from '../shared/services/notification.service';
 import { ProductDetailComponent } from './product-detail.component';
 import { BadgeModule } from 'primeng/badge';
 import { ProductType } from '../proxy/ecommerce/products';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-product',
@@ -36,6 +37,17 @@ import { ProductType } from '../proxy/ecommerce/products';
             ></button>
           }
         </div>
+        @if (selectedItems.length > 0) {
+          <button
+            pButton
+            type="button"
+            (click)="deleteItems()"
+            class="ml-1 p-button-danger"
+            icon="fa fa-minus"
+            iconPos="left"
+            label="xóa"
+          ></button>
+        }
         <div class="col-8">
           <div class="formgroup-inline">
             <div class="field">
@@ -153,6 +165,7 @@ export class ProductComponent implements OnInit {
   readonly #productCategoriesService = inject(ProductCategoriesService);
   readonly #dialogService = inject(DialogService);
   readonly #notificationService = inject(NotificationService);
+  readonly #confirmationService = inject(ConfirmationService);
   readonly #destroyRef = inject(DestroyRef);
 
   loadData() {
@@ -222,7 +235,7 @@ export class ProductComponent implements OnInit {
       if (data) {
         this.loadData();
         this.selectedItems = [];
-        this.#notificationService.showSuccess('Thêm sản phẩm thành công');
+        this.#notificationService.showSuccess('Cập nhật sản phẩm thành công');
       }
     });
   }
@@ -238,5 +251,42 @@ export class ProductComponent implements OnInit {
 
   getProductTypeName(value: number) {
     return ProductType[value];
+  }
+
+  deleteItems() {
+    if (this.selectedItems.length == 0) {
+      this.#notificationService.showError('Phải chọn ít nhất một bản ghi');
+      return;
+    }
+    const ids: string[] = [];
+    this.selectedItems.forEach((element) => {
+      if (element.id != null) {
+        ids.push(element.id);
+      }
+    });
+    this.#confirmationService.confirm({
+      message: 'Bạn có chắc muốn xóa bản ghi này?',
+      accept: () => {
+        this.deleteItemsConfirmed(ids);
+      },
+    });
+  }
+
+  deleteItemsConfirmed(ids: string[]) {
+    this.toggleBlockUI(true);
+    this.#productsService
+      .deleteMultiple(ids)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: () => {
+          this.#notificationService.showSuccess('Xóa thành công');
+          this.loadData();
+          this.selectedItems = [];
+          this.toggleBlockUI(false);
+        },
+        error: () => {
+          this.toggleBlockUI(false);
+        },
+      });
   }
 }
