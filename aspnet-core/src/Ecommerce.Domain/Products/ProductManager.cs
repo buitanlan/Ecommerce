@@ -12,12 +12,19 @@ public class ProductManager(
     IRepository<ProductCategory, Guid> productCategoryRepository)
     : DomainService
 {
-    public async Task<Product> CreateAsync(Guid manufacturerId,
-        string name, string code, string slug,
-        ProductType productType, string sKU,
-        int sortOrder, bool visibility,
-        bool isActive, Guid categoryId,
-        string seoMetaDescription, string description,
+    public async Task<Product> CreateAsync(
+        Guid manufacturerId,
+        string name,
+        string code,
+        string slug,
+        ProductType productType,
+        string sKU,
+        int sortOrder,
+        bool visibility,
+        bool isActive,
+        Guid categoryId,
+        string seoMetaDescription,
+        string description,
         double sellPrice)
     {
         if (await productRepository.AnyAsync(x => x.Name == name))

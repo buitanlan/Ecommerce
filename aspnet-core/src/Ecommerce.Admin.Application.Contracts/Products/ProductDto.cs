@@ -6,6 +6,7 @@ namespace Ecommerce.Admin.Products;
 
 public class ProductDto : IEntityDto<Guid>
 {
+   public Guid ManufacturerId { get; set; }
    public string Name { get; set; }
    public string Code { get; set; }
    public string Slug { get; set; }

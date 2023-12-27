@@ -102,7 +102,7 @@ public class EcommerceAdminHttpApiHostModule : AbpModule
             {
                 options.Authority = configuration["AuthServer:Authority"];
                 options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "Admin";
+                options.Audience = "Ecommerce.Admin";
             });
     }
 

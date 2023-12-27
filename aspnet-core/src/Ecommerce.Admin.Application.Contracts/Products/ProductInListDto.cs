@@ -17,4 +17,6 @@ public class ProductInListDto : EntityDto<Guid>
     public bool IsActive { get; set; }
     public Guid CategoryId { get; set; }
     public string ThumbnailPicture { get; set; }
+    public string CategoryName { get; set; }
+    public string CategorySlug { get; set; }
 }

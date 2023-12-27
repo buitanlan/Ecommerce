@@ -5,7 +5,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormsModule } from '@angular/forms';
 import { SidebarModule } from 'primeng/sidebar';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -340,7 +340,7 @@ import { ButtonModule } from 'primeng/button';
       </div>
     </p-sidebar>
   `,
-  imports: [RadioButtonModule, InputSwitchModule, FormsModule, SidebarModule, NgClass, NgIf, NgForOf, ButtonModule],
+  imports: [RadioButtonModule, InputSwitchModule, FormsModule, SidebarModule, NgClass, ButtonModule],
   standalone: true,
 })
 export class AppConfigComponent {

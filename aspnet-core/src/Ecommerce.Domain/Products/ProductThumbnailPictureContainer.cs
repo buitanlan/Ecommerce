@@ -3,6 +3,4 @@
 namespace Ecommerce.Products;
 
 [BlobContainerName("product-thumbnail-pictures")]
-public class ProductThumbnailPictureContainer
-{
-}
+public class ProductThumbnailPictureContainer;

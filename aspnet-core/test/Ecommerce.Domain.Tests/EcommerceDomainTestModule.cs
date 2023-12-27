@@ -6,7 +6,4 @@ namespace Ecommerce;
 [DependsOn(
     typeof(EcommerceEntityFrameworkCoreTestModule)
     )]
-public class EcommerceDomainTestModule : AbpModule
-{
-
-}
+public class EcommerceDomainTestModule : AbpModule;

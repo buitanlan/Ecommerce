@@ -5,6 +5,7 @@ namespace Ecommerce.Products;
 
 public class ProductAttributeDecimal : Entity<Guid>
 {
+    ProductAttributeDecimal(){}
     public ProductAttributeDecimal(Guid id, Guid attributeId, Guid productId, decimal value)
     {
         Id = id;

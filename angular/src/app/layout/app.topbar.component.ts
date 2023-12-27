@@ -1,8 +1,11 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
 import { NgClass } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { TieredMenuModule } from 'primeng/tieredmenu';
+import { LOGIN_URL } from '../shared/constants/urls.const';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-topbar',
@@ -13,7 +16,7 @@ import { RouterLink } from '@angular/router';
           src="assets/layout/images/{{ layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white' }}.svg"
           alt="logo"
         />
-        <span>SAKAI</span>
+        <span>Ecommerce</span>
       </a>
 
       <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
@@ -37,28 +40,49 @@ import { RouterLink } from '@angular/router';
           <i class="pi pi-calendar"></i>
           <span>Calendar</span>
         </button>
-        <button class="p-link layout-topbar-button">
+        <button class="p-link layout-topbar-button" (click)="userMenu.toggle($event)">
           <i class="pi pi-user"></i>
-          <span>Profile</span>
+          <span>Tài khoản</span>
         </button>
         <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
           <i class="pi pi-cog"></i>
-          <span>Settings</span>
+          <span>Cài đặt</span>
         </button>
       </div>
     </div>
+    <p-tieredMenu #userMenu [model]="userMenuItems" [popup]="true"></p-tieredMenu>
   `,
-  imports: [NgClass, RouterLink],
+  imports: [NgClass, RouterLink, TieredMenuModule],
   standalone: true,
 })
 export class AppTopBarComponent {
   items!: MenuItem[];
+  userMenuItems: MenuItem[] = [
+    {
+      label: 'Xem thông tin cá nhân',
+      icon: 'pi pi-id-card',
+      routerLink: ['/profile'],
+    },
+    {
+      label: 'Đổi mật khẩu',
+      icon: 'pi pi-key',
+      routerLink: ['/change-password'],
+    },
+    {
+      label: 'Đăng xuất',
+      icon: 'pi pi-sign-out',
+      command: (event) => {
+        this.#authService.logout();
+        this.#router.navigate([LOGIN_URL]);
+      },
+    },
+  ];
 
   @ViewChild('menubutton') menuButton!: ElementRef;
-
   @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
-
   @ViewChild('topbarmenu') menu!: ElementRef;
 
-  constructor(public layoutService: LayoutService) {}
+  readonly layoutService = inject(LayoutService);
+  readonly #authService = inject(AuthService);
+  readonly #router = inject(Router);
 }
