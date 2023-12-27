@@ -11,6 +11,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { NotificationService } from './shared/services/notification.service';
 import { UtilityService } from './shared/services/utility.service';
+import { errorHandlerInterceptor } from './shared/interceptors/error-handler.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +23,7 @@ export const appConfig: ApplicationConfig = {
         registerLocaleFn: registerLocale(),
       }),
     ),
-    provideHttpClient(withInterceptors([tokenInterceptor])),
+    provideHttpClient(withInterceptors([tokenInterceptor, errorHandlerInterceptor])),
     DialogService,
     MessageService,
     NotificationService,

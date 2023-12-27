@@ -29,6 +29,22 @@ export class AuthService {
     });
   }
 
+  public refreshToken(refreshToken: string): Observable<LoginResponseDto> {
+    const body = {
+      client_id: environment.oAuthConfig.clientId,
+      client_secret: environment.oAuthConfig.dummyClientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    };
+
+    const data = Object.keys(body)
+      .map((key, index) => `${key}=${encodeURIComponent((body as any)[key])}`)
+      .join('&');
+    return this.#httpClient.post<LoginResponseDto>(environment.oAuthConfig.issuer + 'connect/token', data, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+  }
+
   isAuthenticated = () => !!localStorage.getItem(ACCESS_TOKEN);
 
   logout() {

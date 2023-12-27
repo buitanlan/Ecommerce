@@ -9,33 +9,48 @@ import { Router, RouterLink } from '@angular/router';
 import { ChipsModule } from 'primeng/chips';
 import { LoginRequestDto } from '../../shared/models/login-request.dto';
 import { AuthService } from '../../shared/services/auth.service';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../shared/constants/keys.constant';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TokenStorageService } from '../../shared/services/token.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { BlockUIModule } from 'primeng/blockui';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
   selector: 'app-login',
   template: `
-    <div
-      class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden"
-    >
-      <div class="flex flex-column align-items-center justify-content-center">
-        <img
-          src="assets/layout/images/{{ layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white' }}.svg"
-          alt="Sakai logo"
-          class="mb-5 w-6rem flex-shrink-0"
-        />
+    <div class="surface-0 flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+      <div class="grid justify-content-center p-2 lg:p-0" style="min-width: 80%">
+        <div class="col-12 mt-5 xl:mt-0 text-center">
+          <img
+            src="assets/layout/images/{{
+              layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'
+            }}.svg"
+            alt="Sakai logo"
+            class="mb-5"
+            style="width: 81px; height: 60px"
+          />
+        </div>
         <div
-          style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);"
+          class="col-12 xl:col-6"
+          style="
+        border-radius: 56px;
+        padding: 0.3rem;
+        background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);
+      "
         >
-          <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+          <div
+            class="h-full w-full m-0 py-7 px-4"
+            style="
+          border-radius: 53px;
+          background: linear-gradient(180deg, var(--surface-50) 38.9%, var(--surface-0));
+        "
+          >
             <div class="text-center mb-5">
-              <img src="assets/demo/images/login/avatar.png" alt="Image" height="50" class="mb-3" />
-              <div class="text-900 text-3xl font-medium mb-3">Welcome, Isabel!</div>
-              <span class="text-600 font-medium">Sign in to continue</span>
+              <div class="text-900 text-3xl font-medium mb-3">Xin chào quản trị!</div>
+              <span class="text-600 font-medium">Đăng nhập</span>
             </div>
 
-            <div [formGroup]="loginForm">
+            <form class="w-full md:w-10 mx-auto" [formGroup]="loginForm">
               <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
               <input
                 id="email1"
@@ -43,31 +58,24 @@ import { TokenStorageService } from '../../shared/services/token.service';
                 type="text"
                 placeholder="Địa chỉ email"
                 pInputText
-                class="w-full md:w-30rem mb-5"
-                style="padding:1rem"
+                class="w-full mb-3"
+                style="padding: 1rem"
               />
 
-              <label for="password1" class="block text-900 font-medium text-xl mb-2">Password</label>
+              <label for="password1" class="block text-900 font-medium text-xl mb-2">Mật khẩu</label>
               <p-password
                 id="password1"
                 formControlName="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 [toggleMask]="true"
-                styleClass="mb-5"
-                inputStyleClass="w-full p-3 md:w-30rem"
+                styleClass="w-full mb-3"
               ></p-password>
 
-              <div class="flex align-items-center justify-content-between mb-5 gap-5">
-                <div class="flex align-items-center">
-                  <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
-                  <label for="rememberme1">Remember me</label>
-                </div>
-                <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)"
-                  >Forgot password?</a
-                >
-              </div>
-              <button pButton pRipple label="Đăng nhập" (click)="login()" class="w-full p-3 text-xl"></button>
-            </div>
+              <button pButton pRipple (click)="login()" label="Đăng nhập" class="w-full p-3 text-xl"></button>
+            </form>
+            <p-blockUI [blocked]="blockedPanel">
+              <p-progressSpinner></p-progressSpinner>
+            </p-blockUI>
           </div>
         </div>
       </div>
@@ -102,24 +110,28 @@ import { TokenStorageService } from '../../shared/services/token.service';
     RouterLink,
     ChipsModule,
     ReactiveFormsModule,
+    ProgressSpinnerModule,
+    BlockUIModule,
   ],
   standalone: true,
 })
 export class LoginComponent {
   valCheck: string[] = ['remember'];
-
+  blockedPanel = false;
   password!: string;
+
   readonly layoutService = inject(LayoutService);
   readonly fb = inject(FormBuilder);
   readonly router = inject(Router);
   readonly authService = inject(AuthService);
   readonly #destroyRef = inject(DestroyRef);
   readonly #tokenService = inject(TokenStorageService);
+  readonly #notificationService = inject(NotificationService);
+
   loginForm = this.fb.group({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
-
   login() {
     const request: LoginRequestDto = {
       username: this.loginForm.controls.username.value!,
@@ -129,10 +141,27 @@ export class LoginComponent {
     this.authService
       .login(request)
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((res: any) => {
-        this.#tokenService.saveToken(res.access_token);
-        this.#tokenService.saveRefreshToken(res.refresh_token);
-        void this.router.navigate(['']);
+      .subscribe({
+        next: (res: any) => {
+          this.#tokenService.saveToken(res.access_token);
+          this.#tokenService.saveRefreshToken(res.refresh_token);
+          this.toggleBlockUI(false);
+          void this.router.navigate(['']);
+        },
+        error: () => {
+          this.toggleBlockUI(false);
+          this.#notificationService.showError('Đăng nhập không đúng.');
+        },
       });
+  }
+
+  private toggleBlockUI(enabled: boolean) {
+    if (enabled) {
+      this.blockedPanel = true;
+    } else {
+      setTimeout(() => {
+        this.blockedPanel = false;
+      }, 1000);
+    }
   }
 }
