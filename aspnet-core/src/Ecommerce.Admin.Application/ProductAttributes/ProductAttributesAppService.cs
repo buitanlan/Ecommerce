@@ -43,6 +43,7 @@ public class ProductAttributesAppService(IRepository<ProductAttribute, Guid> rep
         var totalCount = await AsyncExecuter.LongCountAsync(query);
         var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
 
-        return new PagedResultDto<ProductAttributeInListDto>(totalCount, ObjectMapper.Map<List<ProductAttribute>, List<ProductAttributeInListDto>>(data));
+        return new PagedResultDto<ProductAttributeInListDto>(totalCount,
+            ObjectMapper.Map<List<ProductAttribute>, List<ProductAttributeInListDto>>(data));
     }
 }

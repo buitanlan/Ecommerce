@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { PasswordModule } from 'primeng/password';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';

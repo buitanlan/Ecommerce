@@ -6,13 +6,13 @@ settings:
 
 dependencies:
   '@abp/aspnetcore.mvc.ui.theme.leptonxlite':
-    specifier: ~3.0.0
-    version: 3.0.0(@popperjs/core@2.11.8)(jquery@3.7.1)
+    specifier: ~3.0.1
+    version: 3.0.1(@popperjs/core@2.11.8)(jquery@3.7.1)
 
 packages:
 
-  /@abp/aspnetcore.mvc.ui.theme.leptonxlite@3.0.0(@popperjs/core@2.11.8)(jquery@3.7.1):
-    resolution: {integrity: sha512-OrM3o2HgFsw1R/Edq1/kS20JZ9VQ7qm8ge14Kd3kfo9uk6dS9D7XC45ZUfCQUquFqTNHyoOQYfHtra/7Z3U3QQ==}
+  /@abp/aspnetcore.mvc.ui.theme.leptonxlite@3.0.1(@popperjs/core@2.11.8)(jquery@3.7.1):
+    resolution: {integrity: sha512-jRR4QlbJvONcsnMQl6KIkLS66KkpxGrI1PylLTxaCae0/5dqPEksrRjlclD9JMlsb1+uNGzB7+fhMxvA/kquuQ==}
     dependencies:
       '@abp/aspnetcore.mvc.ui.theme.shared': 7.2.3(@popperjs/core@2.11.8)(jquery@3.7.1)
     transitivePeerDependencies:

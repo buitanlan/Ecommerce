@@ -115,7 +115,7 @@ public partial class ProductsAppService(
 
         product.SeoMetaDescription = input.SeoMetaDescription;
         product.Description = input.Description;
-        if (input.ThumbnailPictureContent != null && input.ThumbnailPictureContent.Length > 0)
+        if (input.ThumbnailPictureContent is { Length: > 0 })
         {
             await SaveThumbnailImageAsync(input.ThumbnailPictureName, input.ThumbnailPictureContent);
             product.ThumbnailPicture = input.ThumbnailPictureName;
@@ -163,7 +163,7 @@ public partial class ProductsAppService(
         await fileContainer.SaveAsync(fileName, bytes, true);
     }
 
-    [GeneratedRegex("^[\\w/\\:.-]+;base64,")]
+    [GeneratedRegex(@"^[\w/\:.-]+;base64,")]
     private static partial Regex ThumbnailRegex();
 
     public async Task<ProductAttributeValueDto> AddProductAttributeAsync(AddUpdateProductAttributeDto input)
@@ -335,7 +335,7 @@ public partial class ProductsAppService(
             from aint in aIntTable.DefaultIfEmpty()
             join aVarchar in attributeVarcharQuery on a.Id equals aVarchar.AttributeId into aVarcharTable
             from aVarchar in aVarcharTable.DefaultIfEmpty()
-            join aText in attributeVarcharQuery on a.Id equals aText.AttributeId into aTextTable
+            join aText in attributeTextQuery on a.Id equals aText.AttributeId into aTextTable
             from aText in aTextTable.DefaultIfEmpty()
             where (adate != null || adate.ProductId == productId)
                   && (adecimal != null || adecimal.ProductId == productId)
