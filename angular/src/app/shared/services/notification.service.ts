@@ -9,7 +9,5 @@ export class NotificationService {
     this.#messageService.add({ severity: 'success', summary: 'Thành công', detail: message });
   }
 
-  showError(message: string) {
-    this.#messageService.add({ severity: 'error', summary: 'Lỗi', detail: message });
-  }
+  showError(message: string) {}
 }
