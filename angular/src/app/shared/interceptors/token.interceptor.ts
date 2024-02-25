@@ -1,9 +1,10 @@
 import { inject } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpErrorResponse, HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
-import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from 'rxjs';
+import { HttpErrorResponse, HttpInterceptorFn, HttpRequest, HttpStatusCode } from '@angular/common/http';
+import { BehaviorSubject, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { TokenStorageService } from '../services/token.service';
 import { AuthService } from '../services/auth.service';
 import { LoginResponseDto } from '../models/login-response.dto';
+
 const TOKEN_HEADER_KEY = 'Authorization'; // for Spring Boot back-end
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {

@@ -1,6 +1,6 @@
 import type { CreateUpdateProductCategoryDto, ProductCategoryDto, ProductCategoryInListDto } from './models';
-import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
+import { Rest, RestService } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
 import type { BaseListFilterDto } from '../models';
 

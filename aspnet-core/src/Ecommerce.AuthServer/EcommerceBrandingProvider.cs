@@ -6,5 +6,5 @@ namespace Ecommerce;
 [Dependency(ReplaceServices = true)]
 public class EcommerceBrandingProvider : DefaultBrandingProvider
 {
-    public override string AppName => "Ecommerce";
+    public override string AppName => nameof(Ecommerce);
 }

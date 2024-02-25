@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 import { CoreModule } from '@abp/ng.core';
 import { tokenInterceptor } from './shared/interceptors/token.interceptor';
 import { DialogService } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { NotificationService } from './shared/services/notification.service';
 import { UtilityService } from './shared/services/utility.service';
 import { errorHandlerInterceptor } from './shared/interceptors/error-handler.interceptor';
@@ -28,5 +28,6 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     NotificationService,
     UtilityService,
+    ConfirmationService,
   ],
 };
