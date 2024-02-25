@@ -3,10 +3,13 @@ using Ecommerce.Admin.Manufacturers;
 using Ecommerce.Admin.ProductAttributes;
 using Ecommerce.Admin.ProductCategories;
 using Ecommerce.Admin.Products;
+using Ecommerce.Admin.Roles;
 using Ecommerce.Manufacturers;
 using Ecommerce.ProductAttributes;
 using Ecommerce.ProductCategories;
 using Ecommerce.Products;
+using Ecommerce.Roles;
+using Volo.Abp.Identity;
 
 namespace Ecommerce.Admin;
 
@@ -33,5 +36,16 @@ public class AdminApplicationAutoMapperProfile : Profile
         CreateMap<ProductAttribute, ProductAttributeDto>();
         CreateMap<ProductAttribute, ProductAttributeInListDto>();
         CreateMap<CreateUpdateProductAttributeDto, ProductAttribute>();
+
+        //Roles
+        CreateMap<IdentityRole, RoleDto>().ForMember(x => x.Description,
+            map => map.MapFrom(x => x.ExtraProperties.ContainsKey(RoleConsts.DescriptionFieldName)
+                ? x.ExtraProperties[RoleConsts.DescriptionFieldName]
+                : null));
+        CreateMap<IdentityRole, RoleInListDto>().ForMember(x => x.Description,
+            map => map.MapFrom(x => x.ExtraProperties.ContainsKey(RoleConsts.DescriptionFieldName)
+                ? x.ExtraProperties[RoleConsts.DescriptionFieldName]
+                : null));
+        CreateMap<CreateUpdateRoleDto, IdentityRole>();
     }
 }
