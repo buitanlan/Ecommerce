@@ -154,4 +154,21 @@ public class UsersAppService(IRepository<IdentityUser, Guid> repository, Identit
             throw new UserFriendlyException(errors);
         }
     }
+
+    public async Task SetPasswordAsync(Guid userId, SetPasswordDto input)
+    {
+        var user = await identityUserManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityUser), userId);
+        }
+        var token = await identityUserManager.GeneratePasswordResetTokenAsync(user);
+        var result = await identityUserManager.ResetPasswordAsync(user, token, input.NewPassword);
+        if (!result.Succeeded)
+        {
+            var errorList = result.Errors.ToList();
+            var errors = errorList.Aggregate("", (current, error) => current + error.Description.ToString());
+            throw new UserFriendlyException(errors);
+        }
+    }
 }

@@ -20,4 +20,5 @@ public interface IUsersAppService : ICrudAppService<
     Task<List<UserInListDto>> GetListAllAsync(string filterKeyword);
 
     Task AssignRolesAsync(Guid userId, string[] roleNames);
+    Task SetPasswordAsync(Guid userId, SetPasswordDto input);
 }

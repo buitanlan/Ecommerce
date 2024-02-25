@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ecommerce.EntityFrameworkCore;
 using Ecommerce.MultiTenancy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using StackExchange.Redis;
 using Microsoft.OpenApi.Models;
@@ -46,6 +47,15 @@ namespace Ecommerce.Admin;
 )]
 public class EcommerceAdminHttpApiHostModule : AbpModule
 {
+
+    public override void PreConfigureServices(ServiceConfigurationContext context)
+    {
+        PreConfigure<IdentityBuilder>(builder =>
+        {
+            builder.AddDefaultTokenProviders();
+        });
+    }
+
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
