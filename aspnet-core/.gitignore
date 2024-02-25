@@ -255,7 +255,8 @@ paket-files/
 src/Ecommerce.Web/Logs/*
 src/Ecommerce.Web.Host/Logs/*
 src/Ecommerce.AuthServer/Logs/*
-src/Ecommerce.HttpApi.Host/Logs/*
+src/Ecommerce.Admin.HttpApi.Host/Logs/*
+src/Ecommerce.Public.HttpApi.Host/Logs/*
 src/Ecommerce.HttpApi.HostWithIds/Logs/*
 src/Ecommerce.DbMigrator/Logs/*
 src/Ecommerce.Blazor.Server/Logs/*

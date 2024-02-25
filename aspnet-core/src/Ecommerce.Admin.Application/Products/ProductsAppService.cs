@@ -327,8 +327,8 @@ public partial class ProductsAppService(
         var attributeTextQuery = await productAttributeTextRepository.GetQueryableAsync();
 
         var query = from a in attributeQuery
-            join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTabke
-            from adate in aDateTimeTabke.DefaultIfEmpty()
+            join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTable
+            from adate in aDateTimeTable.DefaultIfEmpty()
             join adecimal in attributeDecimalQuery on a.Id equals adecimal.AttributeId into aDecimalTable
             from adecimal in aDecimalTable.DefaultIfEmpty()
             join aint in attributeIntQuery on a.Id equals aint.AttributeId into aIntTable
@@ -337,11 +337,11 @@ public partial class ProductsAppService(
             from aVarchar in aVarcharTable.DefaultIfEmpty()
             join aText in attributeTextQuery on a.Id equals aText.AttributeId into aTextTable
             from aText in aTextTable.DefaultIfEmpty()
-            where (adate != null || adate.ProductId == productId)
-                  && (adecimal != null || adecimal.ProductId == productId)
-                  && (aint != null || aint.ProductId == productId)
-                  && (aVarchar != null || aVarchar.ProductId == productId)
-                  && (aText != null || aText.ProductId == productId)
+            where (adate == null || adate.ProductId == productId)
+                  && (adecimal == null || adecimal.ProductId == productId)
+                  && (aint == null || aint.ProductId == productId)
+                  && (aVarchar == null || aVarchar.ProductId == productId)
+                  && (aText == null || aText.ProductId == productId)
             select new ProductAttributeValueDto()
             {
                 Label = a.Label,
@@ -359,6 +359,13 @@ public partial class ProductsAppService(
                 TextId = aText.Id,
                 VarcharId = aVarchar.Id,
             };
+
+        query = query.Where(x => x.DateTimeId != null
+                                 || x.DecimalId != null
+                                 || x.IntValue != null
+                                 || x.TextId != null
+                                 || x.VarcharId != null);
+
         return await AsyncExecuter.ToListAsync(query);
     }
 
@@ -374,21 +381,21 @@ public partial class ProductsAppService(
         var attributeTextQuery = await productAttributeTextRepository.GetQueryableAsync();
 
         var query = from a in attributeQuery
-            join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTabke
-            from adate in aDateTimeTabke.DefaultIfEmpty()
+            join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTable
+            from adate in aDateTimeTable.DefaultIfEmpty()
             join adecimal in attributeDecimalQuery on a.Id equals adecimal.AttributeId into aDecimalTable
             from adecimal in aDecimalTable.DefaultIfEmpty()
             join aint in attributeIntQuery on a.Id equals aint.AttributeId into aIntTable
             from aint in aIntTable.DefaultIfEmpty()
             join aVarchar in attributeVarcharQuery on a.Id equals aVarchar.AttributeId into aVarcharTable
             from aVarchar in aVarcharTable.DefaultIfEmpty()
-            join aText in attributeVarcharQuery on a.Id equals aText.AttributeId into aTextTable
+            join aText in attributeTextQuery on a.Id equals aText.AttributeId into aTextTable
             from aText in aTextTable.DefaultIfEmpty()
-            where (adate != null || adate.ProductId == input.ProductId)
-                  && (adecimal != null || adecimal.ProductId == input.ProductId)
-                  && (aint != null || aint.ProductId == input.ProductId)
-                  && (aVarchar != null || aVarchar.ProductId == input.ProductId)
-                  && (aText != null || aText.ProductId == input.ProductId)
+            where (adate == null || adate.ProductId == input.ProductId)
+                  && (adecimal == null || adecimal.ProductId == input.ProductId)
+                  && (aint == null || aint.ProductId == input.ProductId)
+                  && (aVarchar == null || aVarchar.ProductId == input.ProductId)
+                  && (aText == null || aText.ProductId == input.ProductId)
             select new ProductAttributeValueDto()
             {
                 Label = a.Label,
@@ -396,16 +403,24 @@ public partial class ProductsAppService(
                 DataType = a.DataType,
                 Code = a.Code,
                 ProductId = input.ProductId,
-                DateTimeValue = adate.Value,
-                DecimalValue = adecimal.Value,
-                IntValue = aint.Value,
-                TextValue = aText.Value,
-                VarcharValue = aVarchar.Value,
-                DecimalId = adecimal.Id,
-                IntId = aint.Id,
-                TextId = aText.Id,
-                VarcharId = aVarchar.Id,
+                DateTimeValue = adate != null ? adate.Value : null,
+                DecimalValue = adecimal != null ? adecimal.Value : null,
+                IntValue = aint != null ? aint.Value : null,
+                TextValue = aText != null ? aText.Value : null,
+                VarcharValue = aVarchar != null ? aVarchar.Value : null,
+                DateTimeId = adate != null ? adate.Id : null,
+                DecimalId = adecimal != null ? adecimal.Id : null,
+                IntId = aint != null ? aint.Id : null,
+                TextId = aText != null ? aText.Id : Guid.Empty,
+                VarcharId = aVarchar != null ? aVarchar.Id : Guid.Empty,
             };
+
+        query = query.Where(x => x.DateTimeId != null
+                                 || x.DecimalId != null
+                                 || x.IntValue != null
+                                 || x.TextId != null
+                                 || x.VarcharId != null);
+
         var totalCount = await AsyncExecuter.LongCountAsync(query);
         var data = await AsyncExecuter.ToListAsync(
             query.OrderByDescending(x => x.Label)
