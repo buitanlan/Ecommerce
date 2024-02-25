@@ -130,4 +130,28 @@ public class UsersAppService(IRepository<IdentityUser, Guid> repository, Identit
         userDto.Roles = roles;
         return userDto;
     }
+
+    public async Task AssignRolesAsync(Guid userId, string[] roleNames)
+    {
+        var user = await identityUserManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            throw new EntityNotFoundException(typeof(IdentityUser), userId);
+        }
+
+        var currentRoles = await identityUserManager.GetRolesAsync(user);
+        var removedResult = await identityUserManager.RemoveFromRolesAsync(user, currentRoles);
+        var addedResult = await identityUserManager.AddToRolesAsync(user, roleNames);
+        if (!addedResult.Succeeded || !removedResult.Succeeded)
+        {
+            var addedErrorList = addedResult.Errors.ToList();
+            var removedErrorList = removedResult.Errors.ToList();
+            var errorList = new List<Microsoft.AspNetCore.Identity.IdentityError>();
+            errorList.AddRange(addedErrorList);
+            errorList.AddRange(removedErrorList);
+            var errors = errorList.Aggregate("", (current, error) => current + error.Description.ToString());
+
+            throw new UserFriendlyException(errors);
+        }
+    }
 }
