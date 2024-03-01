@@ -151,8 +151,8 @@ public class EcommercePublicWebModule : AbpModule
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Ecommerce.Public.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Ecommerce.Public.Domain"));
+                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Ecommerce.Domain.Shared"));
+                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Ecommerce.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommercePublicApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Ecommerce.Public.Application.Contracts"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommercePublicApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}Ecommerce.Public.Application"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommercePublicWebModule>(hostingEnvironment.ContentRootPath);

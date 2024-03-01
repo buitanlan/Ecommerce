@@ -6,5 +6,5 @@ namespace Ecommerce.Public.Web;
 [Dependency(ReplaceServices = true)]
 public class EcommercePublicBrandingProvider : DefaultBrandingProvider
 {
-    public override string AppName => "Public";
+    public override string AppName => "EcommercePublicWeb";
 }
