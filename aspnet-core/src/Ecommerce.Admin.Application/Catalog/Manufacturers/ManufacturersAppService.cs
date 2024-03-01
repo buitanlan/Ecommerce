@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using Ecommerce.Admin.Permissions;
 using Ecommerce.Manufacturers;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
@@ -10,21 +11,33 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.Manufacturers;
 
-[Authorize]
-public class ManufacturersAppService(IRepository<Manufacturer, Guid> repository) : CrudAppService<
+[Authorize(EcommercePermissions.Manufacturer.Default, Policy = "AdminOnly")]
+public class ManufacturersAppService : CrudAppService<
     Manufacturer,
     ManufacturerDto,
     Guid,
     PagedResultRequestDto,
     CreateUpdateManufacturerDto,
-    CreateUpdateManufacturerDto>(repository), IManufacturersAppService
+    CreateUpdateManufacturerDto>, IManufacturersAppService
 {
+
+    public ManufacturersAppService(IRepository<Manufacturer, Guid> repository) : base(repository)
+    {
+        GetPolicyName = EcommercePermissions.Manufacturer.Default;
+        GetListPolicyName = EcommercePermissions.Manufacturer.Default;
+        CreatePolicyName = EcommercePermissions.Manufacturer.Create;
+        UpdatePolicyName = EcommercePermissions.Manufacturer.Update;
+        DeletePolicyName = EcommercePermissions.Manufacturer.Delete;
+    }
+
+    [Authorize(EcommercePermissions.Manufacturer.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
         await UnitOfWorkManager.Current.SaveChangesAsync();
     }
 
+    [Authorize(EcommercePermissions.Manufacturer.Default)]
     public async Task<List<ManufacturerInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -35,6 +48,7 @@ public class ManufacturersAppService(IRepository<Manufacturer, Guid> repository)
 
     }
 
+    [Authorize(EcommercePermissions.Manufacturer.Default)]
     public async Task<PagedResultDto<ManufacturerInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -43,6 +57,7 @@ public class ManufacturersAppService(IRepository<Manufacturer, Guid> repository)
         var totalCount = await AsyncExecuter.LongCountAsync(query);
         var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
 
-        return new PagedResultDto<ManufacturerInListDto>(totalCount,ObjectMapper.Map<List<Manufacturer>,List<ManufacturerInListDto>>(data));
+        return new PagedResultDto<ManufacturerInListDto>(totalCount,
+            ObjectMapper.Map<List<Manufacturer>, List<ManufacturerInListDto>>(data));
     }
 }

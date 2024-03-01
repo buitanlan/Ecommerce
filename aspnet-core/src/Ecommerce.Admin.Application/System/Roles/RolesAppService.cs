@@ -17,28 +17,47 @@ using Volo.Abp.SimpleStateChecking;
 
 namespace Ecommerce.Admin.Roles;
 
-[Authorize]
-public class RolesAppService(
-    IRepository<IdentityRole, Guid> repository,
-    IPermissionManager permissionManager,
-    IPermissionDefinitionManager permissionDefinitionManager,
-    IOptions<PermissionManagementOptions> options,
-    ISimpleStateCheckerManager<PermissionDefinition> simpleStateCheckerManager
-) : CrudAppService
+[Authorize(IdentityPermissions.Roles.Default, Policy = "AdminOnly")]
+public class RolesAppService : CrudAppService
 <IdentityRole,
     RoleDto,
     Guid,
     PagedResultRequestDto,
     CreateUpdateRoleDto,
-    CreateUpdateRoleDto>(repository), IRolesAppService
+    CreateUpdateRoleDto>, IRolesAppService
 {
+    private readonly IPermissionManager _permissionManager;
+    private readonly IPermissionDefinitionManager _permissionDefinitionManager;
+    private readonly IOptions<PermissionManagementOptions> _options;
+    private readonly ISimpleStateCheckerManager<PermissionDefinition> _simpleStateCheckerManager;
+
+    public RolesAppService(
+        IRepository<IdentityRole, Guid> repository,
+        IPermissionManager permissionManager,
+        IPermissionDefinitionManager permissionDefinitionManager,
+        IOptions<PermissionManagementOptions> options,
+        ISimpleStateCheckerManager<PermissionDefinition> simpleStateCheckerManager) : base(repository)
+    {
+        _permissionManager = permissionManager;
+        _permissionDefinitionManager = permissionDefinitionManager;
+        _options = options;
+        _simpleStateCheckerManager = simpleStateCheckerManager;
+
+        GetPolicyName = IdentityPermissions.Roles.Default;
+        GetListPolicyName = IdentityPermissions.Roles.Default;
+        CreatePolicyName = IdentityPermissions.Roles.Create;
+        UpdatePolicyName = IdentityPermissions.Roles.Update;
+        DeletePolicyName = IdentityPermissions.Roles.Delete;
+    }
+
+    [Authorize(IdentityPermissions.Roles.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
         await UnitOfWorkManager.Current.SaveChangesAsync();
     }
 
-
+    [Authorize(IdentityPermissions.Roles.Default)]
     public async Task<List<RoleInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -47,6 +66,7 @@ public class RolesAppService(
         return ObjectMapper.Map<List<IdentityRole>, List<RoleInListDto>>(data);
     }
 
+    [Authorize(IdentityPermissions.Roles.Default)]
     public async Task<PagedResultDto<RoleInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -59,6 +79,7 @@ public class RolesAppService(
             ObjectMapper.Map<List<IdentityRole>, List<RoleInListDto>>(data));
     }
 
+    [Authorize(IdentityPermissions.Roles.Create)]
     public override async Task<RoleDto> CreateAsync(CreateUpdateRoleDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -76,6 +97,8 @@ public class RolesAppService(
         return ObjectMapper.Map<IdentityRole, RoleDto>(data);
     }
 
+
+    [Authorize(IdentityPermissions.Roles.Update)]
     public override async Task<RoleDto> UpdateAsync(Guid id, CreateUpdateRoleDto input)
     {
         var role = await Repository.GetAsync(id);
@@ -98,6 +121,8 @@ public class RolesAppService(
         return ObjectMapper.Map<IdentityRole, RoleDto>(data);
     }
 
+
+    [Authorize(IdentityPermissions.Roles.Default)]
     public async Task<GetPermissionListResultDto> GetPermissionsAsync(string providerName, string providerKey)
     {
         //await CheckProviderPolicy(providerName);
@@ -108,8 +133,10 @@ public class RolesAppService(
             Groups = new List<PermissionGroupDto>()
         };
 
-        foreach (var group in (await permissionDefinitionManager.GetGroupsAsync())
-                 .Where(x => x.Name.StartsWith("AbpIdentity") || x.Name.StartsWith("EcomAdmin")))
+        var permissionGroups = (await _permissionDefinitionManager.GetGroupsAsync()).Where(x =>
+            x.Name.StartsWith("AbpIdentity") || x.Name.StartsWith("EcomAdmin"));
+
+        foreach (var group in permissionGroups)
         {
             var groupDto = CreatePermissionGroupDto(group);
 
@@ -119,7 +146,7 @@ public class RolesAppService(
                          .Where(x => x.IsEnabled)
                          .Where(x => !x.Providers.Any() || x.Providers.Contains(providerName)))
             {
-                if (await simpleStateCheckerManager.IsEnabledAsync(permission))
+                if (await _simpleStateCheckerManager.IsEnabledAsync(permission))
                 {
                     neededCheckPermissions.Add(permission);
                 }
@@ -135,7 +162,7 @@ public class RolesAppService(
                 .ToList();
 
             var multipleGrantInfo =
-                await permissionManager.GetAsync(neededCheckPermissions.Select(x => x.Name).ToArray(), providerName,
+                await _permissionManager.GetAsync(neededCheckPermissions.Select(x => x.Name).ToArray(), providerName,
                     providerKey);
 
             foreach (var grantInfo in multipleGrantInfo.Result)
@@ -187,6 +214,8 @@ public class RolesAppService(
         };
     }
 
+
+    [Authorize(IdentityPermissions.Roles.Update)]
     public virtual async Task UpdatePermissionsAsync(string providerName, string providerKey,
         UpdatePermissionsDto input)
     {
@@ -194,13 +223,13 @@ public class RolesAppService(
 
         foreach (var permissionDto in input.Permissions)
         {
-            await permissionManager.SetAsync(permissionDto.Name, providerName, providerKey, permissionDto.IsGranted);
+            await _permissionManager.SetAsync(permissionDto.Name, providerName, providerKey, permissionDto.IsGranted);
         }
     }
 
     protected virtual async Task CheckProviderPolicy(string providerName)
     {
-        var policyName = options.Value.ProviderPolicies.GetOrDefault(providerName);
+        var policyName = _options.Value.ProviderPolicies.GetOrDefault(providerName);
         if (policyName.IsNullOrEmpty())
         {
             throw new AbpException(

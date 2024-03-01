@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ecommerce.Admin.Permissions;
 using Ecommerce.ProductCategories;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
@@ -10,15 +11,25 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.ProductCategories;
 
-[Authorize]
-public class ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository) : CrudAppService<
+[Authorize(EcommercePermissions.ProductCategory.Default, Policy = "AdminOnly")]
+public class ProductCategoriesAppService: CrudAppService<
     ProductCategory,
     ProductCategoryDto,
     Guid,
     PagedResultRequestDto,
     CreateUpdateProductCategoryDto,
-    CreateUpdateProductCategoryDto>(repository), IProductCategoriesAppService
+    CreateUpdateProductCategoryDto>, IProductCategoriesAppService
 {
+    public ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository) : base(repository)
+    {
+        GetPolicyName = EcommercePermissions.ProductCategory.Default;
+        GetListPolicyName = EcommercePermissions.ProductCategory.Default;
+        CreatePolicyName = EcommercePermissions.ProductCategory.Create;
+        UpdatePolicyName = EcommercePermissions.ProductCategory.Update;
+        DeletePolicyName = EcommercePermissions.ProductCategory.Delete;
+    }
+    
+    [Authorize(EcommercePermissions.ProductCategory.Default)]
     public async Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -30,6 +41,7 @@ public class ProductCategoriesAppService(IRepository<ProductCategory, Guid> repo
 
     }
 
+    [Authorize(EcommercePermissions.ProductCategory.Default)]
     public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -38,6 +50,7 @@ public class ProductCategoriesAppService(IRepository<ProductCategory, Guid> repo
         return ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data);
     }
 
+    [Authorize(EcommercePermissions.ProductCategory.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);

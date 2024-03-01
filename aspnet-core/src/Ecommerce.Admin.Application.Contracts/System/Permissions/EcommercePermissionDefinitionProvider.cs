@@ -11,6 +11,18 @@ public class EcommercePermissionDefinitionProvider : PermissionDefinitionProvide
         //Catalog
         var catalogGroup = context.AddGroup(EcommercePermissions.CatalogGroupName, L("Permission:Catalog"));
 
+        //Manufacture
+        var manufacturerPermission = catalogGroup.AddPermission(EcommercePermissions.Manufacturer.Default, L("Permission:Catalog.Manufacturer"));
+        manufacturerPermission.AddChild(EcommercePermissions.Manufacturer.Create, L("Permission:Catalog.Manufacturer.Create"));
+        manufacturerPermission.AddChild(EcommercePermissions.Manufacturer.Update, L("Permission:Catalog.Manufacturer.Update"));
+        manufacturerPermission.AddChild(EcommercePermissions.Manufacturer.Delete, L("Permission:Catalog.Manufacturer.Delete"));
+
+        //Product Category
+        var productCategoryPermission = catalogGroup.AddPermission(EcommercePermissions.ProductCategory.Default, L("Permission:Catalog.ProductCategory"));
+        productCategoryPermission.AddChild(EcommercePermissions.ProductCategory.Create, L("Permission:Catalog.ProductCategory.Create"));
+        productCategoryPermission.AddChild(EcommercePermissions.ProductCategory.Update, L("Permission:Catalog.ProductCategory.Update"));
+        productCategoryPermission.AddChild(EcommercePermissions.ProductCategory.Delete, L("Permission:Catalog.ProductCategory.Delete"));
+
         //Add product
         var productPermission = catalogGroup.AddPermission(EcommercePermissions.Product.Default, L("Permission:Catalog.Product"));
         productPermission.AddChild(EcommercePermissions.Product.Create, L("Permission:Catalog.Product.Create"));

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ecommerce.Admin.Permissions;
 using Ecommerce.ProductAttributes;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
@@ -10,21 +11,33 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.ProductAttributes;
 
-[Authorize]
-public class ProductAttributesAppService(IRepository<ProductAttribute, Guid> repository) : CrudAppService<
+[Authorize(EcommercePermissions.Attribute.Default, Policy = "AdminOnly")]
+public class ProductAttributesAppService : CrudAppService<
     ProductAttribute,
     ProductAttributeDto,
     Guid,
     PagedResultRequestDto,
     CreateUpdateProductAttributeDto,
-    CreateUpdateProductAttributeDto>(repository), IProductAttributesAppService
+    CreateUpdateProductAttributeDto>, IProductAttributesAppService
 {
+    public ProductAttributesAppService(IRepository<ProductAttribute, Guid> repository) : base(repository)
+    {
+        GetPolicyName = EcommercePermissions.Attribute.Default;
+        GetListPolicyName = EcommercePermissions.Attribute.Default;
+        CreatePolicyName = EcommercePermissions.Attribute.Create;
+        UpdatePolicyName = EcommercePermissions.Attribute.Update;
+        DeletePolicyName = EcommercePermissions.Attribute.Delete;
+
+    }
+
+    [Authorize(EcommercePermissions.Attribute.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
         await UnitOfWorkManager.Current.SaveChangesAsync();
     }
 
+    [Authorize(EcommercePermissions.Attribute.Default)]
     public async Task<List<ProductAttributeInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -35,6 +48,7 @@ public class ProductAttributesAppService(IRepository<ProductAttribute, Guid> rep
 
     }
 
+    [Authorize(EcommercePermissions.Attribute.Default)]
     public async Task<PagedResultDto<ProductAttributeInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
