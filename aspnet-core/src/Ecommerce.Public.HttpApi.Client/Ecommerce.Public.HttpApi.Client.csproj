@@ -25,4 +25,8 @@
     <Content Remove="**\*generate-proxy.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="PublicHttpApiClientModule.cs" />
+  </ItemGroup>
+
 </Project>

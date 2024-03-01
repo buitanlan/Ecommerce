@@ -3,7 +3,7 @@
 namespace Ecommerce;
 
 [DependsOn(
-    typeof(EcommerceApplicationModule),
+    typeof(EcommercePublicApplicationModule),
     typeof(EcommerceDomainTestModule)
     )]
 public class EcommerceApplicationTestModule : AbpModule;

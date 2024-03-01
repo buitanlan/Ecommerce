@@ -21,4 +21,9 @@
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="8.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="PublicApplicationAutoMapperProfile.cs" />
+    <Compile Remove="PublicAppService.cs" />
+  </ItemGroup>
+
 </Project>

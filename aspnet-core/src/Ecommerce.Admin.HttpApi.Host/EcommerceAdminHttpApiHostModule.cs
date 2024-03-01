@@ -36,7 +36,7 @@ using Volo.Abp.VirtualFileSystem;
 namespace Ecommerce.Admin;
 
 [DependsOn(
-    typeof(AdminHttpApiModule),
+    typeof(EcommerceAdminHttpApiModule),
     typeof(AbpAutofacModule),
     typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpDistributedLockingModule),
@@ -92,7 +92,7 @@ public class EcommerceAdminHttpApiHostModule : AbpModule
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommerceDomainModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<AdminApplicationContractsModule>(
+                options.FileSets.ReplaceEmbeddedByPhysical<EcommerceAdminApplicationContractsModule>(
                     Path.Combine(hostingEnvironment.ContentRootPath,
                         $"..{Path.DirectorySeparatorChar}Ecommerce.Admin.Application.Contracts"));
                 options.FileSets.ReplaceEmbeddedByPhysical<EcommerceAdminApplicationModule>(
