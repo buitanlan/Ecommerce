@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.Admin.Permissions;
 
-public static class EcommercePermissions
+public static class EcommerceAdminPermissions
 {
     public const string SystemGroupName = "EcomAdminSystem";
     public const string CatalogGroupName = "EcomAdminCatalog";

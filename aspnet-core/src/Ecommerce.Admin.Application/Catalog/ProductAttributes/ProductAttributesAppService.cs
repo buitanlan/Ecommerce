@@ -11,7 +11,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.ProductAttributes;
 
-[Authorize(EcommercePermissions.Attribute.Default, Policy = "AdminOnly")]
+[Authorize(EcommerceAdminPermissions.Attribute.Default, Policy = "AdminOnly")]
 public class ProductAttributesAppService : CrudAppService<
     ProductAttribute,
     ProductAttributeDto,
@@ -22,22 +22,22 @@ public class ProductAttributesAppService : CrudAppService<
 {
     public ProductAttributesAppService(IRepository<ProductAttribute, Guid> repository) : base(repository)
     {
-        GetPolicyName = EcommercePermissions.Attribute.Default;
-        GetListPolicyName = EcommercePermissions.Attribute.Default;
-        CreatePolicyName = EcommercePermissions.Attribute.Create;
-        UpdatePolicyName = EcommercePermissions.Attribute.Update;
-        DeletePolicyName = EcommercePermissions.Attribute.Delete;
+        GetPolicyName = EcommerceAdminPermissions.Attribute.Default;
+        GetListPolicyName = EcommerceAdminPermissions.Attribute.Default;
+        CreatePolicyName = EcommerceAdminPermissions.Attribute.Create;
+        UpdatePolicyName = EcommerceAdminPermissions.Attribute.Update;
+        DeletePolicyName = EcommerceAdminPermissions.Attribute.Delete;
 
     }
 
-    [Authorize(EcommercePermissions.Attribute.Delete)]
+    [Authorize(EcommerceAdminPermissions.Attribute.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
         await UnitOfWorkManager.Current.SaveChangesAsync();
     }
 
-    [Authorize(EcommercePermissions.Attribute.Default)]
+    [Authorize(EcommerceAdminPermissions.Attribute.Default)]
     public async Task<List<ProductAttributeInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -48,7 +48,7 @@ public class ProductAttributesAppService : CrudAppService<
 
     }
 
-    [Authorize(EcommercePermissions.Attribute.Default)]
+    [Authorize(EcommerceAdminPermissions.Attribute.Default)]
     public async Task<PagedResultDto<ProductAttributeInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();

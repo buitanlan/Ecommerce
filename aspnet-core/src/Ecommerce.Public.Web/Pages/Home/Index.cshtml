@@ -3,17 +3,16 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Alert
 @using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Blockquote
-@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Button
 @using Volo.Abp.AspNetCore.Mvc.UI.Bundling.TagHelpers
 @using Volo.Abp.Users
 @model Ecommerce.Public.Web.Pages.IndexModel
 @inject IHtmlLocalizer<EcommerceResource> L
 @inject ICurrentUser CurrentUser
 @section styles {
-<abp-style src="/Pages/Index.css" />
+    <abp-style src="/Pages/Home/Index.css" />
 }
 @section scripts {
-<abp-script src="/Pages/Index.js" />
+    <abp-script src="/Pages/Home/Index.js" />
 }
 <section class="section-box">
     <div class="banner-hero banner-1">

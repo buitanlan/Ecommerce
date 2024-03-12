@@ -11,7 +11,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.Manufacturers;
 
-[Authorize(EcommercePermissions.Manufacturer.Default, Policy = "AdminOnly")]
+[Authorize(EcommerceAdminPermissions.Manufacturer.Default, Policy = "AdminOnly")]
 public class ManufacturersAppService : CrudAppService<
     Manufacturer,
     ManufacturerDto,
@@ -23,21 +23,21 @@ public class ManufacturersAppService : CrudAppService<
 
     public ManufacturersAppService(IRepository<Manufacturer, Guid> repository) : base(repository)
     {
-        GetPolicyName = EcommercePermissions.Manufacturer.Default;
-        GetListPolicyName = EcommercePermissions.Manufacturer.Default;
-        CreatePolicyName = EcommercePermissions.Manufacturer.Create;
-        UpdatePolicyName = EcommercePermissions.Manufacturer.Update;
-        DeletePolicyName = EcommercePermissions.Manufacturer.Delete;
+        GetPolicyName = EcommerceAdminPermissions.Manufacturer.Default;
+        GetListPolicyName = EcommerceAdminPermissions.Manufacturer.Default;
+        CreatePolicyName = EcommerceAdminPermissions.Manufacturer.Create;
+        UpdatePolicyName = EcommerceAdminPermissions.Manufacturer.Update;
+        DeletePolicyName = EcommerceAdminPermissions.Manufacturer.Delete;
     }
 
-    [Authorize(EcommercePermissions.Manufacturer.Delete)]
+    [Authorize(EcommerceAdminPermissions.Manufacturer.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
         await UnitOfWorkManager.Current.SaveChangesAsync();
     }
 
-    [Authorize(EcommercePermissions.Manufacturer.Default)]
+    [Authorize(EcommerceAdminPermissions.Manufacturer.Default)]
     public async Task<List<ManufacturerInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -48,7 +48,7 @@ public class ManufacturersAppService : CrudAppService<
 
     }
 
-    [Authorize(EcommercePermissions.Manufacturer.Default)]
+    [Authorize(EcommerceAdminPermissions.Manufacturer.Default)]
     public async Task<PagedResultDto<ManufacturerInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();

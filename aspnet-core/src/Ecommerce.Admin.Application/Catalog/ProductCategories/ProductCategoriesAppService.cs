@@ -11,7 +11,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.ProductCategories;
 
-[Authorize(EcommercePermissions.ProductCategory.Default, Policy = "AdminOnly")]
+[Authorize(EcommerceAdminPermissions.ProductCategory.Default, Policy = "AdminOnly")]
 public class ProductCategoriesAppService: CrudAppService<
     ProductCategory,
     ProductCategoryDto,
@@ -22,14 +22,14 @@ public class ProductCategoriesAppService: CrudAppService<
 {
     public ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository) : base(repository)
     {
-        GetPolicyName = EcommercePermissions.ProductCategory.Default;
-        GetListPolicyName = EcommercePermissions.ProductCategory.Default;
-        CreatePolicyName = EcommercePermissions.ProductCategory.Create;
-        UpdatePolicyName = EcommercePermissions.ProductCategory.Update;
-        DeletePolicyName = EcommercePermissions.ProductCategory.Delete;
+        GetPolicyName = EcommerceAdminPermissions.ProductCategory.Default;
+        GetListPolicyName = EcommerceAdminPermissions.ProductCategory.Default;
+        CreatePolicyName = EcommerceAdminPermissions.ProductCategory.Create;
+        UpdatePolicyName = EcommerceAdminPermissions.ProductCategory.Update;
+        DeletePolicyName = EcommerceAdminPermissions.ProductCategory.Delete;
     }
     
-    [Authorize(EcommercePermissions.ProductCategory.Default)]
+    [Authorize(EcommerceAdminPermissions.ProductCategory.Default)]
     public async Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -41,7 +41,7 @@ public class ProductCategoriesAppService: CrudAppService<
 
     }
 
-    [Authorize(EcommercePermissions.ProductCategory.Default)]
+    [Authorize(EcommerceAdminPermissions.ProductCategory.Default)]
     public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -50,7 +50,7 @@ public class ProductCategoriesAppService: CrudAppService<
         return ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data);
     }
 
-    [Authorize(EcommercePermissions.ProductCategory.Delete)]
+    [Authorize(EcommerceAdminPermissions.ProductCategory.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);

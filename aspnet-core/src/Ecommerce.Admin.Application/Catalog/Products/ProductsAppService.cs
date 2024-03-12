@@ -17,7 +17,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Admin.Products;
 
-[Authorize(EcommercePermissions.Product.Default, Policy = "AdminOnly")]
+[Authorize(EcommerceAdminPermissions.Product.Default, Policy = "AdminOnly")]
 public partial class ProductsAppService
     : CrudAppService<
             Product,
@@ -63,14 +63,14 @@ public partial class ProductsAppService
         _productAttributeVarcharRepository = productAttributeVarcharRepository;
         _productAttributeTextRepository = productAttributeTextRepository;
 
-        GetPolicyName = EcommercePermissions.Product.Default;
-        GetListPolicyName = EcommercePermissions.Product.Default;
-        CreatePolicyName = EcommercePermissions.Product.Create;
-        UpdatePolicyName = EcommercePermissions.Product.Update;
-        DeletePolicyName = EcommercePermissions.Product.Delete;
+        GetPolicyName = EcommerceAdminPermissions.Product.Default;
+        GetListPolicyName = EcommerceAdminPermissions.Product.Default;
+        CreatePolicyName = EcommerceAdminPermissions.Product.Create;
+        UpdatePolicyName = EcommerceAdminPermissions.Product.Update;
+        DeletePolicyName = EcommerceAdminPermissions.Product.Delete;
     }
 
-    [Authorize(EcommercePermissions.Product.Default)]
+    [Authorize(EcommerceAdminPermissions.Product.Default)]
     public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
@@ -83,7 +83,7 @@ public partial class ProductsAppService
             ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data));
     }
 
-    [Authorize(EcommercePermissions.Product.Default)]
+    [Authorize(EcommerceAdminPermissions.Product.Default)]
     public async Task<List<ProductInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -93,7 +93,7 @@ public partial class ProductsAppService
         return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
     }
 
-    [Authorize(EcommercePermissions.Product.Update)]
+    [Authorize(EcommerceAdminPermissions.Product.Update)]
     public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
     {
         var product = await _productManager.CreateAsync(
@@ -123,7 +123,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Update)]
+    [Authorize(EcommerceAdminPermissions.Product.Update)]
     public override async Task<ProductDto> UpdateAsync(Guid id, CreateUpdateProductDto input)
     {
         var product = await Repository.GetAsync(id);
@@ -165,7 +165,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Delete)]
+    [Authorize(EcommerceAdminPermissions.Product.Delete)]
     public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
     {
         await Repository.DeleteManyAsync(ids);
@@ -173,7 +173,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Default)]
+    [Authorize(EcommerceAdminPermissions.Product.Default)]
     public async Task<string> GetThumbnailImageAsync(string fileName)
     {
         if (string.IsNullOrEmpty(fileName))
@@ -211,7 +211,7 @@ public partial class ProductsAppService
     private static partial Regex ThumbnailRegex();
 
 
-    [Authorize(EcommercePermissions.Product.Update)]
+    [Authorize(EcommerceAdminPermissions.Product.Update)]
     public async Task<ProductAttributeValueDto> AddProductAttributeAsync(AddUpdateProductAttributeDto input)
     {
         var product = await Repository.GetAsync(input.ProductId);
@@ -250,6 +250,7 @@ public partial class ProductsAppService
                     input.IntValue.Value);
                 await _productAttributeIntRepository.InsertAsync(productAttributeInt);
                 break;
+
             case AttributeType.Decimal:
                 if (input.DecimalValue is null)
                 {
@@ -271,6 +272,7 @@ public partial class ProductsAppService
                     input.ProductId, input.VarcharValue);
                 await _productAttributeVarcharRepository.InsertAsync(productAttributeVarchar);
                 break;
+
             case AttributeType.Text:
                 if (input.TextValue is null)
                 {
@@ -302,7 +304,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Update)]
+    [Authorize(EcommerceAdminPermissions.Product.Update)]
     public async Task RemoveProductAttributeAsync(Guid attributeId, Guid id)
     {
         var attribute = await _productAttributeRepository.GetAsync(x => x.Id == attributeId);
@@ -322,6 +324,7 @@ public partial class ProductsAppService
 
                 await _productAttributeDateTimeRepository.DeleteAsync(productAttributeDateTime);
                 break;
+
             case AttributeType.Int:
 
                 var productAttributeInt = await _productAttributeIntRepository.GetAsync(x => x.Id == id);
@@ -332,6 +335,7 @@ public partial class ProductsAppService
 
                 await _productAttributeIntRepository.DeleteAsync(productAttributeInt);
                 break;
+
             case AttributeType.Decimal:
                 var productAttributeDecimal = await _productAttributeDecimalRepository.GetAsync(x => x.Id == id);
                 if (productAttributeDecimal is null)
@@ -370,7 +374,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Default)]
+    [Authorize(EcommerceAdminPermissions.Product.Default)]
     public async Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId)
     {
         var attributeQuery = await _productAttributeRepository.GetQueryableAsync();
@@ -425,7 +429,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Default)]
+    [Authorize(EcommerceAdminPermissions.Product.Default)]
     public async Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributesAsync(
         ProductAttributeListFilterDto input)
     {
@@ -488,7 +492,7 @@ public partial class ProductsAppService
     }
 
 
-    [Authorize(EcommercePermissions.Product.Update)]
+    [Authorize(EcommerceAdminPermissions.Product.Update)]
     public async Task<ProductAttributeValueDto> UpdateProductAttributeAsync(Guid id, AddUpdateProductAttributeDto input)
     {
         var product = await Repository.GetAsync(input.ProductId);
@@ -520,6 +524,7 @@ public partial class ProductsAppService
                 productAttributeDateTime.Value = input.DateTimeValue.Value;
                 await _productAttributeDateTimeRepository.UpdateAsync(productAttributeDateTime);
                 break;
+
             case AttributeType.Int:
                 if (input.IntValue is null)
                 {
@@ -535,6 +540,7 @@ public partial class ProductsAppService
                 productAttributeInt.Value = input.IntValue.Value;
                 await _productAttributeIntRepository.UpdateAsync(productAttributeInt);
                 break;
+
             case AttributeType.Decimal:
                 if (input.DecimalValue is null)
                 {
@@ -550,6 +556,7 @@ public partial class ProductsAppService
                 productAttributeDecimal.Value = input.DecimalValue.Value;
                 await _productAttributeDecimalRepository.UpdateAsync(productAttributeDecimal);
                 break;
+
             case AttributeType.Varchar:
                 if (input.VarcharValue is null)
                 {
@@ -565,6 +572,7 @@ public partial class ProductsAppService
                 productAttributeVarchar.Value = input.VarcharValue;
                 await _productAttributeVarcharRepository.UpdateAsync(productAttributeVarchar);
                 break;
+
             case AttributeType.Text:
                 if (input.TextValue is null)
                 {
@@ -580,6 +588,7 @@ public partial class ProductsAppService
                 productAttributeText.Value = input.TextValue;
                 await _productAttributeTextRepository.UpdateAsync(productAttributeText);
                 break;
+
             default:
                 throw new ArgumentOutOfRangeException();
         }
