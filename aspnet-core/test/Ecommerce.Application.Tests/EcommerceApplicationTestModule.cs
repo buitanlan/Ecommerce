@@ -1,4 +1,5 @@
-﻿using Volo.Abp.Modularity;
+﻿using Ecommerce.Public;
+using Volo.Abp.Modularity;
 
 namespace Ecommerce;
 

@@ -7,7 +7,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace Ecommerce.Catalog.Manufacturers;
+namespace Ecommerce.Public.Catalog.Manufacturers;
 
 public class ManufacturersAppService(IRepository<Manufacturer, Guid> repository) : ReadOnlyAppService
 <Manufacturer,

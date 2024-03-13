@@ -117,134 +117,33 @@
         </div>
         <div class="mt-50">
             <div class="row">
+                @foreach (var item in Model.Categories)
+                {
+                var url = $"/products/{item.Code}.html";
                 <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
                     <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/smartphone.png" alt="Ecom"></a></div>
+                        <div class="image-box">
+                            <a href="@url" title="@item.Name">
+                                <img src="/assets/imgs/page/homepage1/smartphone.png" alt="@item.Name">
+                            </a>
+                        </div>
                         <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Smart Phone</h6>
+                            <a class="color-brand-3 font-sm-bold" title="@item.Name" href="@url">
+                                <h6>@item.Name</h6>
                             </a>
                             <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Phone Accessories</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Phone Cases</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Postpaid Phones</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Refurbished Phones</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
+                                @foreach (var child in item.Children)
+                                {
+                                var childUrl = $"/products/{child.Code}.html";
+
+                                <li><a class="font-sm" href="@childUrl">@child.Name</a></li>
+                                }
+                            </ul>
+                            <a class="btn btn-gray-abs" title="@item.Name" href="@url">View all</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/television.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Television</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">HD DVD Players</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Projection Screens</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Television Accessories</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">TV-DVD Combos</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/computer.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Computers</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Computer Components</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Computer Accessories</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Desktops</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Monitors</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/electric.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Electronics</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Office Electronics</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Portable Audio &amp; Video</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Washing Machine</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Accessories &amp; Supplies</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/laptop.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Laptop &amp; Tablet</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Office laptop</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Gaming laptop</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Laptop accessories</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Tablet</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/smartwatches.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Smartwatches</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Sport Watches</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Chronograph Watches</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Kids Watches</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Luxury Watches</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/gaming.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Gaming</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Game Controllers</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Gaming Keyboards</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">PC Gaming Mice</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">PC Game Headsets</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12">
-                    <div class="card-grid-style-2 card-grid-style-2-small hover-up">
-                        <div class="image-box"><a href="shop-grid.html"><img src="/assets/imgs/page/homepage1/outdoor.png" alt="Ecom"></a></div>
-                        <div class="info-right">
-                            <a class="color-brand-3 font-sm-bold" href="shop-grid.html">
-                                <h6>Outdoor Camera</h6>
-                            </a>
-                            <ul class="list-links-disc">
-                                <li><a class="font-sm" href="shop-grid.html">Security &amp; Surveillance</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Surveillance DVR Kits</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Surveillance NVR Kits</a></li>
-                                <li><a class="font-sm" href="shop-grid.html">Smart Outdoor Lighting</a></li>
-                            </ul><a class="btn btn-gray-abs" href="shop-grid.html">View all</a>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>
@@ -296,38 +195,37 @@
         <div class="tab-content">
             <div class="tab-pane fade active show" id="tab-all" role="tabpanel" aria-labelledby="tab-all">
                 <div class="list-products-5">
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    @foreach(var item in Model.TopSellerProducts)
+                    {
+                    <partial name="_ProductItem1" model="item"/>
+                    }
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-bestseller" role="tabpanel" aria-labelledby="tab-bestseller">
                 <div class="list-products-5">
+                    @* <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-mostviewed" role="tabpanel" aria-labelledby="tab-mostviewed">
                 <div class="list-products-5">
+                    @* <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-topbrands" role="tabpanel" aria-labelledby="tab-topbrands">
                 <div class="list-products-5">
+                    @*  <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
         </div>
@@ -406,32 +304,32 @@
             <div class="col-lg-8">
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <partial name="_ProductItem1" />
+                        @*<partial name="_ProductItem1" />*@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <partial name="_ProductItem1" />
+                        @*<partial name="_ProductItem1" />*@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <partial name="_ProductItem1" />
+                        @*<partial name="_ProductItem1" />*@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <partial name="_ProductItem1" />
+                        @*<partial name="_ProductItem1" />*@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <partial name="_ProductItem1" />
+                        @*<partial name="_ProductItem1" />*@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6 col-12">
-                        <partial name="_ProductItem1" />
+                        @*<partial name="_ProductItem1" />*@
                     </div>
                 </div>
             </div>
         </div>
         <div class="list-products-5">
+            @*<partial name="_ProductItem1" />
             <partial name="_ProductItem1" />
             <partial name="_ProductItem1" />
             <partial name="_ProductItem1" />
-            <partial name="_ProductItem1" />
-            <partial name="_ProductItem1" />
+            <partial name="_ProductItem1" />*@
         </div>
     </div>
 </section>
@@ -504,38 +402,38 @@
         <div class="tab-content">
             <div class="tab-pane fade active show" id="tab-2-all" role="tabpanel" aria-labelledby="tab-2-all">
                 <div class="list-products-5">
+                    @* <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-2-bestseller" role="tabpanel" aria-labelledby="tab-2-bestseller">
                 <div class="list-products-5">
+                    @* <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-2-mostviewed" role="tabpanel" aria-labelledby="tab-2-mostviewed">
                 <div class="list-products-5">
+                    @* <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-2-topbrands" role="tabpanel" aria-labelledby="tab-2-topbrands">
                 <div class="list-products-5">
+                    @*<partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
                     <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
-                    <partial name="_ProductItem1" />
+                    <partial name="_ProductItem1" />*@
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ecommerce.Catalog.Products.Attributes;
+using Ecommerce.Public.Catalog.Products;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
@@ -14,4 +15,5 @@ public interface IProductsAppService : IReadOnlyAppService<ProductDto, Guid, Pag
     Task<string> GetThumbnailImageAsync(string fileName);
     Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId);
     Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributesAsync(ProductAttributeListFilterDto input);
+    Task<List<ProductInListDto>> GetListTopSellerAsync(int numberOfRecords);
 }

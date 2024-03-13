@@ -7,7 +7,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace Ecommerce.Catalog.ProductAttributes;
+namespace Ecommerce.Public.Catalog.ProductAttributes;
 
  public class ProductAttributesAppService(IRepository<ProductAttribute, Guid> repository) : ReadOnlyAppService<
      ProductAttribute,

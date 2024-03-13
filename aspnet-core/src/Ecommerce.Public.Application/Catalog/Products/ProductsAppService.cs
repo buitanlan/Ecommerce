@@ -7,12 +7,13 @@ using Ecommerce.Catalog.Products.Attributes;
 using Ecommerce.ProductAttributes;
 using Ecommerce.ProductCategories;
 using Ecommerce.Products;
+using Ecommerce.Public.Catalog.Products;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Repositories;
 
-namespace Ecommerce.Catalog.Products;
+namespace Ecommerce.Public.Catalog.Products;
 
 public class ProductsAppService : ReadOnlyAppService<
     Product,
@@ -206,5 +207,17 @@ public class ProductsAppService : ReadOnlyAppService<
                 .Take(input.MaxResultCount)
         );
         return new PagedResultDto<ProductAttributeValueDto>(totalCount, data);
+    }
+
+    public async Task<List<ProductInListDto>> GetListTopSellerAsync(int numberOfRecords)
+    {
+        var query = await Repository.GetQueryableAsync();
+        query = query
+            .Where(x => x.IsActive)
+            .OrderByDescending(x=>x.CreationTime)
+            .Take(numberOfRecords);
+        var data = await AsyncExecuter.ToListAsync(query);
+
+        return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
     }
 }

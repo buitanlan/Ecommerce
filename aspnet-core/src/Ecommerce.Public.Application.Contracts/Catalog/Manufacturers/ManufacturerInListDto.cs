@@ -1,7 +1,7 @@
 ﻿using System;
 using Volo.Abp.Application.Dtos;
 
-namespace Ecommerce.Catalog.Manufacturers;
+namespace Ecommerce.Public.Catalog.Manufacturers;
 
 public class ManufacturerInListDto : EntityDto<Guid>
 {

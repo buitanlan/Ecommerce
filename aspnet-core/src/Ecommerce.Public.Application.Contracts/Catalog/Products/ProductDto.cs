@@ -2,7 +2,7 @@
 using Ecommerce.Products;
 using Volo.Abp.Application.Dtos;
 
-namespace Ecommerce.Catalog.Products;
+namespace Ecommerce.Public.Catalog.Products;
 
 public class ProductDto : IEntityDto<Guid>
 {

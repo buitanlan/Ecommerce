@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace Ecommerce.Catalog.Manufacturers;
+namespace Ecommerce.Public.Catalog.Manufacturers;
 
 public interface IManufacturersAppService : IReadOnlyAppService<ManufacturerDto, Guid, PagedResultRequestDto>
 {

@@ -8,7 +8,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace Ecommerce.Catalog.ProductCategories;
+namespace Ecommerce.Public.Catalog.ProductCategories;
 
 public class ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository) : CrudAppService<
     ProductCategory,

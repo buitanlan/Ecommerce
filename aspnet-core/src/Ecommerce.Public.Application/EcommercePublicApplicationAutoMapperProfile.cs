@@ -1,14 +1,15 @@
 ﻿using AutoMapper;
-using Ecommerce.Catalog.Manufacturers;
-using Ecommerce.Catalog.ProductAttributes;
 using Ecommerce.Catalog.Products;
 using Ecommerce.Manufacturers;
 using Ecommerce.ProductAttributes;
 using Ecommerce.ProductCategories;
 using Ecommerce.Products;
+using Ecommerce.Public.Catalog.Manufacturers;
+using Ecommerce.Public.Catalog.ProductAttributes;
+using Ecommerce.Public.Catalog.Products;
 using Ecommerce.Public.ProductCategories;
 
-namespace Ecommerce;
+namespace Ecommerce.Public;
 
 public class EcommercePublicApplicationAutoMapperProfile : Profile
 {
