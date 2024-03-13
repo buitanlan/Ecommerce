@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ecommerce.Public.Application.Contracts;
 using Ecommerce.Catalog.Products;
 using Ecommerce.Catalog.Products.Attributes;
 using Ecommerce.ProductAttributes;
 using Ecommerce.ProductCategories;
 using Ecommerce.Products;
-using Ecommerce.Public.Catalog.Products;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
@@ -61,21 +61,18 @@ public class ProductsAppService : ReadOnlyAppService<
     }
 
 
-    public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
+    public async Task<PagedResult<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
     {
         var query = await Repository.GetQueryableAsync();
         query = query.WhereIf(!string.IsNullOrWhiteSpace(input.Keyword), x => x.Name.Contains(input.Keyword));
         query = query.WhereIf(input.CategoryId.HasValue, x => x.CategoryId == input.CategoryId);
 
         var totalCount = await AsyncExecuter.LongCountAsync(query);
-        var data = await AsyncExecuter.ToListAsync(
-            query.OrderByDescending(x => x.CreationTime)
-                .Skip(input.SkipCount)
-                .Take(input.MaxResultCount)
-        );
+        var data = await AsyncExecuter.ToListAsync(query.Skip((input.CurrentPage - 1) * input.PageSize)
+            .Take(input.PageSize));
 
-        return new PagedResultDto<ProductInListDto>(totalCount,
-            ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data));
+        return new PagedResult<ProductInListDto>(
+            ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data), totalCount, input.CurrentPage, input.PageSize);
     }
 
 
@@ -150,7 +147,7 @@ public class ProductsAppService : ReadOnlyAppService<
     }
 
 
-    public async Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributesAsync(
+    public async Task<PagedResult<ProductAttributeValueDto>> GetListProductAttributesAsync(
         ProductAttributeListFilterDto input)
     {
         var attributeQuery = await _productAttributeRepository.GetQueryableAsync();
@@ -201,12 +198,9 @@ public class ProductsAppService : ReadOnlyAppService<
                                  || x.TextId != null
                                  || x.VarcharId != null);
         var totalCount = await AsyncExecuter.LongCountAsync(query);
-        var data = await AsyncExecuter.ToListAsync(
-            query.OrderByDescending(x => x.Label)
-                .Skip(input.SkipCount)
-                .Take(input.MaxResultCount)
-        );
-        return new PagedResultDto<ProductAttributeValueDto>(totalCount, data);
+            var data = await AsyncExecuter.ToListAsync(query.Skip((input.CurrentPage - 1) * input.PageSize)
+                .Take(input.PageSize));
+        return new PagedResult<ProductAttributeValueDto>(data,totalCount, input.CurrentPage, input.PageSize);
     }
 
     public async Task<List<ProductInListDto>> GetListTopSellerAsync(int numberOfRecords)
