@@ -7,24 +7,17 @@ using Volo.Abp.Caching;
 
 namespace Ecommerce.Public.Web.ViewComponents;
 
-public class HeaderViewComponent : ViewComponent
+public class HeaderViewComponent(
+    IProductCategoriesAppService productCategoriesAppService,
+    IDistributedCache<HeaderCacheItem> distributedCache)
+    : ViewComponent
 {
-    private readonly IProductCategoriesAppService _productCategoriesAppService;
-    private readonly IDistributedCache<HeaderCacheItem> _distributedCache;
-
-    public HeaderViewComponent(IProductCategoriesAppService productCategoriesAppService,
-        IDistributedCache<HeaderCacheItem> distributedCache)
-    {
-        _productCategoriesAppService = productCategoriesAppService;
-        _distributedCache = distributedCache;
-    }
-
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var cacheItem = await _distributedCache.GetOrAddAsync(
+        var cacheItem = await distributedCache.GetOrAddAsync(
             EcommercePublicConsts.CacheKeys.HeaderData, async () =>
             {
-                var model = await _productCategoriesAppService.GetListAllAsync();
+                var model = await productCategoriesAppService.GetListAllAsync();
                 return new HeaderCacheItem()
                 {
                     Categories = model

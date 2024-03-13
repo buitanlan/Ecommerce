@@ -217,8 +217,8 @@ public class EcommercePublicWebModule : AbpModule
         services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Public API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce Public API", Version = "v1" });
+                options.DocInclusionPredicate((_, _) => true);
                 options.CustomSchemaIds(type => type.FullName);
             }
         );

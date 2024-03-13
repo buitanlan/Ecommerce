@@ -6,7 +6,6 @@ using Ecommerce.Public.Application.Contracts;
 using Ecommerce.Catalog.Products;
 using Ecommerce.Catalog.Products.Attributes;
 using Ecommerce.ProductAttributes;
-using Ecommerce.ProductCategories;
 using Ecommerce.Products;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -15,42 +14,20 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Ecommerce.Public.Catalog.Products;
 
-public class ProductsAppService : ReadOnlyAppService<
+public class ProductsAppService(
+    IRepository<Product, Guid> repository,
+    IBlobContainer<ProductThumbnailPictureContainer> fileContainer,
+    IRepository<ProductAttribute> productAttributeRepository,
+    IRepository<ProductAttributeDateTime> productAttributeDateTimeRepository,
+    IRepository<ProductAttributeInt> productAttributeIntRepository,
+    IRepository<ProductAttributeDecimal> productAttributeDecimalRepository,
+    IRepository<ProductAttributeVarchar> productAttributeVarcharRepository,
+    IRepository<ProductAttributeText> productAttributeTextRepository) : ReadOnlyAppService<
     Product,
     ProductDto,
     Guid,
-    PagedResultRequestDto>, IProductsAppService
+    PagedResultRequestDto>(repository), IProductsAppService
 {
-    private readonly IBlobContainer<ProductThumbnailPictureContainer> _fileContainer;
-    private readonly IRepository<ProductAttribute> _productAttributeRepository;
-    private readonly IRepository<ProductAttributeDateTime> _productAttributeDateTimeRepository;
-    private readonly IRepository<ProductAttributeInt> _productAttributeIntRepository;
-    private readonly IRepository<ProductAttributeDecimal> _productAttributeDecimalRepository;
-    private readonly IRepository<ProductAttributeVarchar> _productAttributeVarcharRepository;
-    private readonly IRepository<ProductAttributeText> _productAttributeTextRepository;
-
-
-    public ProductsAppService(IRepository<Product, Guid> repository,
-        IRepository<ProductCategory> productCategoryRepository,
-        IBlobContainer<ProductThumbnailPictureContainer> fileContainer,
-        IRepository<ProductAttribute> productAttributeRepository,
-        IRepository<ProductAttributeDateTime> productAttributeDateTimeRepository,
-        IRepository<ProductAttributeInt> productAttributeIntRepository,
-        IRepository<ProductAttributeDecimal> productAttributeDecimalRepository,
-        IRepository<ProductAttributeVarchar> productAttributeVarcharRepository,
-        IRepository<ProductAttributeText> productAttributeTextRepository
-    )
-        : base(repository)
-    {
-        _fileContainer = fileContainer;
-        _productAttributeRepository = productAttributeRepository;
-        _productAttributeDateTimeRepository = productAttributeDateTimeRepository;
-        _productAttributeIntRepository = productAttributeIntRepository;
-        _productAttributeDecimalRepository = productAttributeDecimalRepository;
-        _productAttributeVarcharRepository = productAttributeVarcharRepository;
-        _productAttributeTextRepository = productAttributeTextRepository;
-    }
-
     public async Task<List<ProductInListDto>> GetListAllAsync()
     {
         var query = await Repository.GetQueryableAsync();
@@ -83,7 +60,7 @@ public class ProductsAppService : ReadOnlyAppService<
             return null;
         }
 
-        var thumbnailContent = await _fileContainer.GetAllBytesOrNullAsync(fileName);
+        var thumbnailContent = await fileContainer.GetAllBytesOrNullAsync(fileName);
 
         if (thumbnailContent is null)
         {
@@ -96,13 +73,13 @@ public class ProductsAppService : ReadOnlyAppService<
 
     public async Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId)
     {
-        var attributeQuery = await _productAttributeRepository.GetQueryableAsync();
+        var attributeQuery = await productAttributeRepository.GetQueryableAsync();
 
-        var attributeDateTimeQuery = await _productAttributeDateTimeRepository.GetQueryableAsync();
-        var attributeDecimalQuery = await _productAttributeDecimalRepository.GetQueryableAsync();
-        var attributeIntQuery = await _productAttributeIntRepository.GetQueryableAsync();
-        var attributeVarcharQuery = await _productAttributeVarcharRepository.GetQueryableAsync();
-        var attributeTextQuery = await _productAttributeTextRepository.GetQueryableAsync();
+        var attributeDateTimeQuery = await productAttributeDateTimeRepository.GetQueryableAsync();
+        var attributeDecimalQuery = await productAttributeDecimalRepository.GetQueryableAsync();
+        var attributeIntQuery = await productAttributeIntRepository.GetQueryableAsync();
+        var attributeVarcharQuery = await productAttributeVarcharRepository.GetQueryableAsync();
+        var attributeTextQuery = await productAttributeTextRepository.GetQueryableAsync();
 
         var query = from a in attributeQuery
             join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTable
@@ -150,13 +127,13 @@ public class ProductsAppService : ReadOnlyAppService<
     public async Task<PagedResult<ProductAttributeValueDto>> GetListProductAttributesAsync(
         ProductAttributeListFilterDto input)
     {
-        var attributeQuery = await _productAttributeRepository.GetQueryableAsync();
+        var attributeQuery = await productAttributeRepository.GetQueryableAsync();
 
-        var attributeDateTimeQuery = await _productAttributeDateTimeRepository.GetQueryableAsync();
-        var attributeDecimalQuery = await _productAttributeDecimalRepository.GetQueryableAsync();
-        var attributeIntQuery = await _productAttributeIntRepository.GetQueryableAsync();
-        var attributeVarcharQuery = await _productAttributeVarcharRepository.GetQueryableAsync();
-        var attributeTextQuery = await _productAttributeTextRepository.GetQueryableAsync();
+        var attributeDateTimeQuery = await productAttributeDateTimeRepository.GetQueryableAsync();
+        var attributeDecimalQuery = await productAttributeDecimalRepository.GetQueryableAsync();
+        var attributeIntQuery = await productAttributeIntRepository.GetQueryableAsync();
+        var attributeVarcharQuery = await productAttributeVarcharRepository.GetQueryableAsync();
+        var attributeTextQuery = await productAttributeTextRepository.GetQueryableAsync();
 
         var query = from a in attributeQuery
             join adate in attributeDateTimeQuery on a.Id equals adate.AttributeId into aDateTimeTable
@@ -213,5 +190,11 @@ public class ProductsAppService : ReadOnlyAppService<
         var data = await AsyncExecuter.ToListAsync(query);
 
         return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
+    }
+
+    public async Task<ProductDto> GetBySlugAsync(string slug)
+    {
+        var product = await repository.GetAsync(x => x.Slug == slug);
+        return ObjectMapper.Map<Product, ProductDto>(product);
     }
 }

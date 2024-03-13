@@ -1,12 +1,13 @@
-﻿using Castle.Core.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 
 namespace Ecommerce.Public.Web.Pages.Auth;
 
 public class RegisterModel(IConfiguration configuration) : PageModel
 {
-    public void OnGet()
+    public IActionResult OnGet()
     {
-
+        return Redirect(configuration["AuthServer:Authority"] + "/" + "Account/Register");
     }
 }
