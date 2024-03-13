@@ -6,7 +6,7 @@ settings:
 
 dependencies:
   '@abp/aspnetcore.mvc.ui.theme.leptonxlite':
-    specifier: ~3.0.3
+    specifier: ~3.0.4
     version: 3.0.4(@popperjs/core@2.11.8)(jquery@3.7.1)
 
 packages:

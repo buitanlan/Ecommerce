@@ -1,12 +1,14 @@
 ﻿using System.Threading.Tasks;
+using Ecommerce.Public.ProductCategories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Public.Web.ViewComponents;
 
-public class HeaderViewComponent : ViewComponent
+public class HeaderViewComponent(IProductCategoriesAppService productCategoriesAppService) : ViewComponent
 {
-    public Task<IViewComponentResult> InvokeAsync()
+    public async Task<IViewComponentResult> InvokeAsync()
     {
-        return Task.FromResult<IViewComponentResult>(View());
+        var model = await productCategoriesAppService.GetListAllAsync();
+        return View(model);
     }
 }
