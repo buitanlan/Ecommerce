@@ -1,19 +1,11 @@
 ﻿using System;
-using Volo.Abp.Domain.Entities.Auditing;
+using Ecommerce.Orders;
+using Volo.Abp.Application.Dtos;
 
-namespace Ecommerce.Orders;
+namespace Ecommerce.Public.Orders;
 
-public class Order : FullAuditedAggregateRoot<Guid>
+public class OrderDto : EntityDto<Guid>
 {
-    public Order()
-    {
-        
-    }
-
-    public Order(Guid id)
-    {
-        Id = id;
-    }
     public string Code { get; set; }
     public OrderStatus Status { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
