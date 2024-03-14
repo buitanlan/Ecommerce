@@ -6,4 +6,6 @@ public static class EcommerceConsts
 
     public const string DbSchema = null;
     public const string ProductIdentitySettingId = "Product";
-    public const string ProductIdentitySettingPrefix = "P";}
+    public const string ProductIdentitySettingPrefix = "P";
+    public const string Cart = "Cart";
+}
