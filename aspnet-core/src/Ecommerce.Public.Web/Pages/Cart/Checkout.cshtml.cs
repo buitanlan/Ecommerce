@@ -4,20 +4,17 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Ecommerce.Emailing;
+using Ecommerce.Orders.Events;
 using Ecommerce.Public.Orders;
 using Ecommerce.Public.Web.Extensions;
 using Ecommerce.Public.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Volo.Abp.Emailing;
-using Volo.Abp.TextTemplating;
+using Volo.Abp.EventBus.Local;
 
 namespace Ecommerce.Public.Web.Pages.Cart;
 
-public class CheckoutModel(IOrdersAppService ordersAppService,
-    IEmailSender emailSender,
-    ITemplateRenderer templateRenderer) : PageModel
+public class CheckoutModel(IOrdersAppService ordersAppService, ILocalEventBus localEventBus) : PageModel
 {
     public List<CartItem> CartItems { get; set; }
 
@@ -54,22 +51,21 @@ public class CheckoutModel(IOrdersAppService ordersAppService,
         });
         CartItems = GetCartItems();
 
-        if (order is  null)
+        if (order is null)
         {
-           CreateStatus = false;
+            CreateStatus = false;
         }
+
         CreateStatus = true;
 
         if (User.Identity is { IsAuthenticated: true })
         {
             var email = User.GetSpecificClaim(ClaimTypes.Email);
-            var emailBody = await templateRenderer.RenderAsync(
-                EmailTemplates.CreateOrderEmail,
-                new
-                {
-                    message = "Create order success"
-                });
-            await emailSender.SendAsync(email, "Tạo đơn hàng thành công", emailBody);
+            await localEventBus.PublishAsync(new NewOrderCreatedEvent()
+            {
+                CustomerEmail = email,
+                Message = "Create order success"
+            });
         }
     }
 
