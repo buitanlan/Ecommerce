@@ -95,12 +95,12 @@ public class OpenIddictDataSeedContributor(
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Admin Application",
                 secret: configurationSection["Ecommerce_Admin:ClientSecret"] ?? "1q2w3e*",
-                grantTypes: new List<string> //Hybrid flow
-                {
+                grantTypes:
+                [
                     OpenIddictConstants.GrantTypes.Password,
                     OpenIddictConstants.GrantTypes.RefreshToken,
                     OpenIddictConstants.GrantTypes.Implicit
-                },
+                ],
                 scopes: adminScopes,
                 redirectUri: adminWebClientRootUrl,                
                 clientUri: adminWebClientRootUrl,
@@ -120,11 +120,11 @@ public class OpenIddictDataSeedContributor(
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Web Application",
                 secret: configurationSection["Ecommerce_Web:ClientSecret"] ?? "1q2w3e*",
-                grantTypes: new List<string>
-                {
+                grantTypes:
+                [
                     OpenIddictConstants.GrantTypes.AuthorizationCode,
                     OpenIddictConstants.GrantTypes.Implicit
-                },
+                ],
                 scopes: clientScopes,
                 redirectUri: $"{webClientRootUrl}signin-oidc",
                 clientUri: webClientRootUrl,
@@ -143,10 +143,10 @@ public class OpenIddictDataSeedContributor(
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Swagger Admin Application",
                 secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                },
+                grantTypes:
+                [
+                    OpenIddictConstants.GrantTypes.AuthorizationCode
+                ],
                 scopes: adminScopes,
                 redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
                 clientUri: swaggerRootUrl

@@ -130,7 +130,7 @@ public class RolesAppService : CrudAppService
         var result = new GetPermissionListResultDto
         {
             EntityDisplayName = providerKey,
-            Groups = new List<PermissionGroupDto>()
+            Groups = []
         };
 
         var permissionGroups = (await _permissionDefinitionManager.GetGroupsAsync()).Where(x =>
@@ -200,7 +200,7 @@ public class RolesAppService : CrudAppService
             DisplayName = permission.DisplayName?.Localize(StringLocalizerFactory),
             ParentName = permission.Parent?.Name,
             AllowedProviders = permission.Providers,
-            GrantedProviders = new List<ProviderInfoDto>()
+            GrantedProviders = []
         };
     }
 
@@ -210,7 +210,7 @@ public class RolesAppService : CrudAppService
         {
             Name = group.Name,
             DisplayName = group.DisplayName?.Localize(StringLocalizerFactory),
-            Permissions = new List<PermissionGrantInfoDto>(),
+            Permissions = [],
         };
     }
 
