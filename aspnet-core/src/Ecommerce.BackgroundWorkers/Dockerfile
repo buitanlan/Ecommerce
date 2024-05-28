@@ -6,6 +6,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Ecommerce.BackgroundWorkers/Ecommerce.BackgroundWorkers.csproj", "src/Ecommerce.BackgroundWorkers/"]
+COPY ["src/Ecommerce.EntityFrameworkCore/Ecommerce.EntityFrameworkCore.csproj", "src/Ecommerce.EntityFrameworkCore/"]
+COPY ["src/Ecommerce.Domain/Ecommerce.Domain.csproj", "src/Ecommerce.Domain/"]
+COPY ["src/Ecommerce.Domain.Shared/Ecommerce.Domain.Shared.csproj", "src/Ecommerce.Domain.Shared/"]
 RUN dotnet restore "src/Ecommerce.BackgroundWorkers/Ecommerce.BackgroundWorkers.csproj"
 COPY . .
 WORKDIR "/src/src/Ecommerce.BackgroundWorkers"

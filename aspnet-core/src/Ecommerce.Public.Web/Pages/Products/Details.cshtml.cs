@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
-using Ecommerce.Catalog.Products;
 using Ecommerce.Public.Catalog.Products;
 using Ecommerce.Public.ProductCategories;
 

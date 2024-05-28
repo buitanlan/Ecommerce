@@ -2,14 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ecommerce.EntityFrameworkCore;
 using Ecommerce.BackgroundWorkers.MailCampaigns;
-using Ecommerce.EntityFrameworkCore;
 using TeduEcommerce.BackgroundWorkers;
 using Volo.Abp;
 using Volo.Abp.Autofac;
