@@ -1,13 +1,14 @@
 import type { CreateUpdateManufacturerDto, ManufacturerDto, ManufacturerInListDto } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { BaseListFilterDto } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ManufacturersService {
+  private restService = inject(RestService);
   apiName = 'Default';
 
   create = (input: CreateUpdateManufacturerDto, config?: Partial<Rest.Config>) =>
@@ -86,6 +87,4 @@ export class ManufacturersService {
       },
       { apiName: this.apiName, ...config },
     );
-
-  constructor(private restService: RestService) {}
 }

@@ -8,13 +8,14 @@ import type {
 } from './models';
 import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
-import { Injectable } from '@angular/core';
-import type { ProductInListDto } from '../product-categories/models';
+import { Injectable, inject } from '@angular/core';
+import type { ProductInListDto } from '../product-categories';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
+  private restService = inject(RestService);
   apiName = 'Default';
 
   addProductAttribute = (input: AddUpdateProductAttributeDto, config?: Partial<Rest.Config>) =>
@@ -172,6 +173,4 @@ export class ProductsService {
       },
       { apiName: this.apiName, ...config },
     );
-
-  constructor(private restService: RestService) {}
 }

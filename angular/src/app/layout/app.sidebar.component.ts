@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import { AppMenuComponent } from './app.menu.component';
 
@@ -9,8 +9,6 @@ import { AppMenuComponent } from './app.menu.component';
   standalone: true,
 })
 export class AppSidebarComponent {
-  constructor(
-    public layoutService: LayoutService,
-    public el: ElementRef,
-  ) {}
+  public layoutService = inject(LayoutService);
+  public el = inject(ElementRef);
 }
