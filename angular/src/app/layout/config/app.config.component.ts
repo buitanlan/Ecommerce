@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, inject } from '@angular/core';
 import { LayoutService } from '../service/app.layout.service';
 import { MenuService } from '../app.menu.service';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-config',
+
   template: `
     <button class="layout-config-button p-link" type="button" (click)="onConfigButtonClick()">
       <i class="pi pi-cog"></i>
@@ -46,7 +47,7 @@ import { ButtonModule } from 'primeng/button';
         ></button>
       </div>
 
-      @if (!minimal) {
+      @if (!minimal()) {
         <h5>Menu Type</h5>
         <div class="field-radiobutton">
           <p-radioButton name="menuMode" value="static" [(ngModel)]="menuMode" inputId="mode1"></p-radioButton>
@@ -58,7 +59,7 @@ import { ButtonModule } from 'primeng/button';
         </div>
       }
 
-      @if (!minimal) {
+      @if (!minimal()) {
         <h5>Input Style</h5>
         <div class="flex">
           <div class="field-radiobutton flex-1">
@@ -344,14 +345,11 @@ import { ButtonModule } from 'primeng/button';
   standalone: true,
 })
 export class AppConfigComponent {
-  @Input() minimal: boolean = false;
+  public layoutService = inject(LayoutService);
+  public menuService = inject(MenuService);
+  minimal = input<boolean>(false);
 
   scales: number[] = [12, 13, 14, 15, 16];
-
-  constructor(
-    public layoutService: LayoutService,
-    public menuService: MenuService,
-  ) {}
 
   get visible(): boolean {
     return this.layoutService.state.configSidebarVisible;

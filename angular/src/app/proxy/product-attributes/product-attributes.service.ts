@@ -1,13 +1,14 @@
 import type { CreateUpdateProductAttributeDto, ProductAttributeDto, ProductAttributeInListDto } from './models';
+import { RestService, Rest } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
-import { Rest, RestService } from '@abp/ng.core';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import type { BaseListFilterDto } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductAttributesService {
+  private restService = inject(RestService);
   apiName = 'Default';
 
   create = (input: CreateUpdateProductAttributeDto, config?: Partial<Rest.Config>) =>
@@ -86,6 +87,4 @@ export class ProductAttributesService {
       },
       { apiName: this.apiName, ...config },
     );
-
-  constructor(private restService: RestService) {}
 }

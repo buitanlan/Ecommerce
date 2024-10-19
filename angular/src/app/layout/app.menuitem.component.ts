@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit, input, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Subscription } from 'rxjs';
@@ -11,64 +11,65 @@ import { RippleModule } from 'primeng/ripple';
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: '[app-menuitem]',
+
   template: `
     <ng-container>
-      @if (root && item.visible !== false) {
-        <div class="layout-menuitem-root-text">{{ item.label }}</div>
+      @if (root() && item().visible) {
+        <div class='layout-menuitem-root-text'>{{ item().label }}</div>
       }
-      @if ((!item.routerLink || item.items) && item.visible !== false) {
+      @if ((!item().routerLink || item().items) && item().visible !== false) {
         <a
-          [attr.href]="item.url"
-          (click)="itemClick($event)"
-          [ngClass]="item.class"
-          [attr.target]="item.target"
-          tabindex="0"
+          [attr.href]='item().url'
+          (click)='itemClick($event)'
+          [ngClass]='item().class'
+          [attr.target]='item().target'
+          tabindex='0'
           pRipple
         >
-          <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
-          <span class="layout-menuitem-text">{{ item.label }}</span>
-          @if (item.items) {
-            <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
+          <i [ngClass]='item().icon' class='layout-menuitem-icon'></i>
+          <span class='layout-menuitem-text'>{{ item().label }}</span>
+          @if (item().items) {
+            <i class='pi pi-fw pi-angle-down layout-submenu-toggler'></i>
           }
         </a>
       }
-      @if (item.routerLink && !item.items && item.visible !== false) {
+      @if (item().routerLink && !item().items && item().visible !== false) {
         <a
-          (click)="itemClick($event)"
-          [ngClass]="item.class"
-          [routerLink]="item.routerLink"
-          routerLinkActive="active-route"
+          (click)='itemClick($event)'
+          [ngClass]='item().class'
+          [routerLink]='item().routerLink'
+          routerLinkActive='active-route'
           [routerLinkActiveOptions]="
-            item.routerLinkActiveOptions || {
+            item().routerLinkActiveOptions || {
               paths: 'exact',
               queryParams: 'ignored',
               matrixParams: 'ignored',
               fragment: 'ignored'
             }
           "
-          [fragment]="item.fragment"
-          [queryParamsHandling]="item.queryParamsHandling"
-          [preserveFragment]="item.preserveFragment"
-          [skipLocationChange]="item.skipLocationChange"
-          [replaceUrl]="item.replaceUrl"
-          [state]="item.state"
-          [queryParams]="item.queryParams"
-          [attr.target]="item.target"
-          tabindex="0"
+          [fragment]='item().fragment'
+          [queryParamsHandling]='item().queryParamsHandling'
+          [preserveFragment]='item().preserveFragment'
+          [skipLocationChange]='item().skipLocationChange'
+          [replaceUrl]='item().replaceUrl'
+          [state]='item().state'
+          [queryParams]='item().queryParams'
+          [attr.target]='item().target'
+          tabindex='0'
           pRipple
         >
-          <i [ngClass]="item.icon" class="layout-menuitem-icon"></i>
-          <span class="layout-menuitem-text">{{ item.label }}</span>
-          @if (item.items) {
-            <i class="pi pi-fw pi-angle-down layout-submenu-toggler"></i>
+          <i [ngClass]='item().icon' class='layout-menuitem-icon'></i>
+          <span class='layout-menuitem-text'>{{ item().label }}</span>
+          @if (item().items) {
+            <i class='pi pi-fw pi-angle-down layout-submenu-toggler'></i>
           }
         </a>
       }
 
-      @if (item.items && item.visible !== false) {
-        <ul [@children]="submenuAnimation">
-          @for (child of item.items; track child; let i = $index) {
-            <li app-menuitem [item]="child" [index]="i" [parentKey]="key"></li>
+      @if (item().items && item().visible) {
+        <ul [@children]='submenuAnimation'>
+          @for (child of item().items; track child; let i = $index) {
+            <li app-menuitem [item]='child' [index]='i' [parentKey]='key'></li>
           }
         </ul>
       }
@@ -93,15 +94,22 @@ import { RippleModule } from 'primeng/ripple';
   ],
   imports: [RouterLink, RouterLinkActive, NgClass, RippleModule],
   standalone: true,
+  host: {
+    '[class.layout-root-menuitem]': 'root()'
+  }
 })
 export class AppMenuitemComponent implements OnInit, OnDestroy {
-  @Input() item: any;
+  public layoutService = inject(LayoutService);
+  private cd = inject(ChangeDetectorRef);
+  public router = inject(Router);
+  private menuService = inject(MenuService);
+  item = input<any>();
 
-  @Input() index!: number;
+  index = input<number>();
 
-  @Input() @HostBinding('class.layout-root-menuitem') root!: boolean;
+  root = input<boolean>();
 
-  @Input() parentKey!: string;
+  parentKey = input<string>();
 
   active = false;
 
@@ -111,12 +119,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
 
   key: string = '';
 
-  constructor(
-    public layoutService: LayoutService,
-    private cd: ChangeDetectorRef,
-    public router: Router,
-    private menuService: MenuService,
-  ) {
+  constructor() {
     this.menuSourceSubscription = this.menuService.menuSource$.subscribe((value) => {
       Promise.resolve(null).then(() => {
         if (value.routeEvent) {
@@ -134,22 +137,22 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     });
 
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((params) => {
-      if (this.item.routerLink) {
+      if (this.item().routerLink) {
         this.updateActiveStateFromRoute();
       }
     });
   }
 
   ngOnInit() {
-    this.key = this.parentKey ? this.parentKey + '-' + this.index : String(this.index);
+    this.key = this.parentKey() ? this.parentKey()! + '-' + this.index() : String(this.index());
 
-    if (this.item.routerLink) {
+    if (this.item().routerLink) {
       this.updateActiveStateFromRoute();
     }
   }
 
   updateActiveStateFromRoute() {
-    let activeRoute = this.router.isActive(this.item.routerLink[0], {
+    let activeRoute = this.router.isActive(this.item().routerLink[0], {
       paths: 'exact',
       queryParams: 'ignored',
       matrixParams: 'ignored',
@@ -163,18 +166,18 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
 
   itemClick(event: Event) {
     // avoid processing disabled items
-    if (this.item.disabled) {
+    if (this.item().disabled) {
       event.preventDefault();
       return;
     }
 
     // execute command
-    if (this.item.command) {
-      this.item.command({ originalEvent: event, item: this.item });
+    if (this.item().command) {
+      this.item().command({ originalEvent: event, item: this.item() });
     }
 
     // toggle active state
-    if (this.item.items) {
+    if (this.item().items) {
       this.active = !this.active;
     }
 
@@ -182,12 +185,12 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
   }
 
   get submenuAnimation() {
-    return this.root ? 'expanded' : this.active ? 'expanded' : 'collapsed';
+    return this.root() ? 'expanded' : this.active ? 'expanded' : 'collapsed';
   }
 
   @HostBinding('class.active-menuitem')
   get activeClass() {
-    return this.active && !this.root;
+    return this.active && !this.root()!;
   }
 
   ngOnDestroy() {

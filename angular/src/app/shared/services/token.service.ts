@@ -7,8 +7,6 @@ const REFRESHTOKEN_KEY = 'auth-refreshtoken';
   providedIn: 'root',
 })
 export class TokenStorageService {
-  constructor() {}
-
   signOut(): void {
     window.sessionStorage.clear();
   }

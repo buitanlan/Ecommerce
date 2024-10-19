@@ -17,8 +17,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { BadgeModule } from 'primeng/badge';
 import { TableModule } from 'primeng/table';
 import { AttributeDetailComponent } from './atrribute-detail.componnet';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
+import { ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'app-attribute',
@@ -152,8 +151,7 @@ import { InputTextModule } from 'primeng/inputtext';
     PaginatorModule,
     BadgeModule,
     TableModule,
-    ButtonModule,
-    InputTextModule,
+    ButtonDirective,
   ],
 })
 export class AttributeComponent {

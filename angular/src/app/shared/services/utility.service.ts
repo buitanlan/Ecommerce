@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable()
 export class UtilityService {
   private _router: Router;
 
-  constructor(router: Router) {
+  constructor() {
+    const router = inject(Router);
+
     this._router = router;
   }
 

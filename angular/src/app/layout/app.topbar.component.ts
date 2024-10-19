@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, viewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from './service/app.layout.service';
 import { NgClass } from '@angular/common';
@@ -9,6 +9,7 @@ import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-topbar',
+
   template: `
     <div class="layout-topbar">
       <a class="layout-topbar-logo" routerLink="">
@@ -34,7 +35,7 @@ import { AuthService } from '../shared/services/auth.service';
       <div
         #topbarmenu
         class="layout-topbar-menu"
-        [ngClass]="{ 'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible }"
+        [ngClass]="{ 'layout-topbar-menu()-mobile-active': layoutService.state.profileSidebarVisible }"
       >
         <button class="p-link layout-topbar-button">
           <i class="pi pi-calendar"></i>
@@ -56,6 +57,13 @@ import { AuthService } from '../shared/services/auth.service';
   standalone: true,
 })
 export class AppTopBarComponent {
+  menuButton = viewChild<ElementRef>('menubutton');
+  topbarMenuButton = viewChild<ElementRef>('topbarmenubutton');
+  menu = viewChild<ElementRef>('topbarmenu');
+
+  readonly layoutService = inject(LayoutService);
+  readonly #authService = inject(AuthService);
+  readonly #router = inject(Router);
   items!: MenuItem[];
   userMenuItems: MenuItem[] = [
     {
@@ -77,12 +85,4 @@ export class AppTopBarComponent {
       },
     },
   ];
-
-  @ViewChild('menubutton') menuButton!: ElementRef;
-  @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
-  @ViewChild('topbarmenu') menu!: ElementRef;
-
-  readonly layoutService = inject(LayoutService);
-  readonly #authService = inject(AuthService);
-  readonly #router = inject(Router);
 }
