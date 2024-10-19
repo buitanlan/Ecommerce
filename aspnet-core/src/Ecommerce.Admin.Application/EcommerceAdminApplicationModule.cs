@@ -14,7 +14,7 @@ namespace Ecommerce.Admin;
 [DependsOn(
     typeof(EcommerceDomainModule),
     typeof(AbpAccountApplicationModule),
-    typeof(AdminApplicationContractsModule),
+    typeof(EcommerceAdminApplicationContractsModule),
     typeof(AbpIdentityApplicationModule),
     typeof(AbpPermissionManagementApplicationModule),
     typeof(AbpTenantManagementApplicationModule),

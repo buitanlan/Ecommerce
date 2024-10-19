@@ -10,6 +10,6 @@ public class ProductTag : Entity
 
     public override object[] GetKeys()
     {
-        return new object[] { ProductId, TagId };
+        return [ProductId, TagId];
     }
 }
