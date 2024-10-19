@@ -9,6 +9,6 @@ public class ProductLink : Entity
     public Guid LinkedProductId { get; set; }
     public override object[] GetKeys()
     {
-        return new object[] { ProductId, LinkedProductId };
+        return [ProductId, LinkedProductId];
     }
 }

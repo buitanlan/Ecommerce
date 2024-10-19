@@ -1,9 +1,10 @@
-﻿using Volo.Abp.Modularity;
+﻿using Ecommerce.Public;
+using Volo.Abp.Modularity;
 
 namespace Ecommerce;
 
 [DependsOn(
-    typeof(EcommerceApplicationModule),
+    typeof(EcommercePublicApplicationModule),
     typeof(EcommerceDomainTestModule)
     )]
 public class EcommerceApplicationTestModule : AbpModule;

@@ -13,6 +13,6 @@ public class OrderItem : Entity
 
     public override object[] GetKeys()
     {
-        return new object[] { OrderId, ProductId };
+        return [OrderId, ProductId];
     }
 }

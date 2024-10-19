@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
+
 @Injectable()
 export class UtilityService {
   private _router: Router;

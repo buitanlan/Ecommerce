@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Ecommerce</RootNamespace>
+    <RootNamespace>Ecommerce.Public</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,17 +12,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.Account.HttpApi.Client" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.Identity.HttpApi.Client" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi.Client" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi.Client" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi.Client" Version="8.0.0" />
-    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi.Client" Version="8.0.0" />
+    <PackageReference Include="Volo.Abp.Account.HttpApi.Client" Version="8.1.3" />
+    <PackageReference Include="Volo.Abp.Identity.HttpApi.Client" Version="8.1.3" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi.Client" Version="8.1.3" />
+    <PackageReference Include="Volo.Abp.TenantManagement.HttpApi.Client" Version="8.1.3" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi.Client" Version="8.1.3" />
+    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi.Client" Version="8.1.3" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="**\*generate-proxy.json" />
     <Content Remove="**\*generate-proxy.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="PublicHttpApiClientModule.cs" />
   </ItemGroup>
 
 </Project>

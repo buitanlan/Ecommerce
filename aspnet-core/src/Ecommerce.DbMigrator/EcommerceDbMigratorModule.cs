@@ -7,6 +7,6 @@ namespace Ecommerce.DbMigrator;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(EcommerceEntityFrameworkCoreModule),
-    typeof(EcommerceApplicationContractsModule)
+    typeof(EcommercePublicApplicationContractsModule)
     )]
 public class EcommerceDbMigratorModule : AbpModule;
